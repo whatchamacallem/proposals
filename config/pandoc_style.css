@@ -1,0 +1,14 @@
+/* SPDX-FileCopyrightText: © 2026 Adrian Johnston. */
+/* SPDX-License-Identifier: MIT */
+/* This file is licensed under the terms of the LICENSE.md file. */
+
+body[data-syntax-highlighting="off"]
+  code.sourceCode:not(.diff)
+  span:is(.co, .cv, .do, .in) {
+  color: inherit !important;
+  font-style: inherit !important;
+}
+
+body:has(pre.lineAnchors) #title-block-header > table {
+  display: none;
+}

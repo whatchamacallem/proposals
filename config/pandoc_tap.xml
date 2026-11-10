@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-FileCopyrightText: © 2026 Adrian Johnston. -->
+<!-- SPDX-License-Identifier: MIT -->
+<!-- This file is licensed under the terms of the LICENSE.md file. -->
+<!DOCTYPE language>
+<language name="TAP" section="Other" version="1" kateversion="5.0"
+          extensions="*.tap" license="MIT">
+  <highlighting>
+    <contexts>
+      <context name="line" attribute="Normal" lineEndContext="#stay">
+        <RegExpr String="^\s*not ok\b" attribute="Bad"/>
+        <RegExpr String="^\s*Bail out!.*$" attribute="Bad"/>
+        <RegExpr String="^\s*ok\b" attribute="Good"/>
+        <RegExpr String="^\s*TAP version \d+\s*$" attribute="Plan"/>
+        <RegExpr String="^\s*\d+\.\.\d+.*$" attribute="Plan"/>
+        <RegExpr String="^\s*#.*$" attribute="Comment"/>
+        <RegExpr String="^\s*(---|\.\.\.)\s*$" attribute="Fence"/>
+        <RegExpr String="^\s*[A-Za-z_]+:" attribute="Key"/>
+      </context>
+    </contexts>
+    <itemDatas>
+      <itemData name="Normal" defStyleNum="dsNormal"/>
+      <itemData name="Good" defStyleNum="dsAttribute"/>
+      <itemData name="Bad" defStyleNum="dsError"/>
+      <itemData name="Plan" defStyleNum="dsDecVal"/>
+      <itemData name="Comment" defStyleNum="dsComment"/>
+      <itemData name="Fence" defStyleNum="dsOthers"/>
+      <itemData name="Key" defStyleNum="dsDataType"/>
+    </itemDatas>
+  </highlighting>
+</language>
