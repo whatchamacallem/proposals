@@ -8,9 +8,6 @@ set -euo pipefail
 open_stream() {
   [[ ! -s $tap ]] || return 0
   echo "TAP version 14"
-  echo "# SPDX-FileCopyrightText: © 2026 Adrian Johnston."
-  echo "# SPDX-License-Identifier: MIT"
-  echo "# This file is licensed under the terms of the LICENSE.md file."
 }
 
 fail_build() {
