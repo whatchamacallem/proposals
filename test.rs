@@ -5,13 +5,8 @@
 include!(env!("INTEROP_RS"));
 
 fn main() -> std::process::ExitCode {
-    println!("# {}", env!("RUSTC_VERSION"));
+    println!("# rustc: {}", env!("RUSTC_VERSION"));
     println!("# binding: {}", env!("INTEROP_RS"));
-    for line in include_str!(env!("INTEROP_RS")).lines() {
-        if let Some(signature) = line.trim().strip_prefix("pub fn ") {
-            println!("# binds: {}", signature.trim_end_matches(" {"));
-        }
-    }
 
     let mut t = thermostat_factory(20.0, 22.0);
     let u = thermostat_factory(25.0, 18.0);
