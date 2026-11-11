@@ -1,0 +1,418 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\documentclass[
+  english,
+  10pt,
+  a4paper,
+  oneside,
+  final]{article}
+\usepackage{xcolor}
+\usepackage[left=2.245cm,right=2.245cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{246,248,250}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{#1}
+\newcommand{\AttributeTok}[1]{#1}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.62,0.41,0.03}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.62,0.41,0.03}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.62,0.41,0.03}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.42,0.45,0.49}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.42,0.45,0.49}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{#1}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.38,0.49}{#1}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.00,0.38,0.49}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.62,0.41,0.03}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.42,0.45,0.49}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.62,0.41,0.03}{#1}}
+\newcommand{\FunctionTok}[1]{#1}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.42,0.45,0.49}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.38,0.49}{#1}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.48,0.24,0.57}{#1}}
+\newcommand{\OtherTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.44,0.31,0.22}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.62,0.41,0.03}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.62,0.41,0.03}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.62,0.41,0.03}{#1}}
+\newcommand{\VariableTok}[1]{#1}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.62,0.41,0.03}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.42,0.45,0.49}{\textbf{#1}}}
+\ifLuaTeX
+  \usepackage{luacolor}
+  \usepackage[soul]{lua-ul}
+\else
+  \usepackage{soul}
+\fi
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\ifLuaTeX
+\usepackage[bidi=basic,shorthands=off]{babel}
+\else
+\usepackage[bidi=default,shorthands=off]{babel}
+\fi
+\ifLuaTeX
+  \usepackage{selnolig} % disable illegal ligatures
+\fi
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage[normalem]{ulem}
+\usepackage{mdframed}
+\providecommand{\CSLIndent}{}
+\renewcommand{\CSLIndent}[1]{\hfill\break\hspace*{\cslhangindent}\ignorespaces#1}
+
+% adjust quote indent
+\renewenvironment{quote}{\list{}{\leftmargin=0.2in}\item[]}{\endlist}
+
+% https://github.com/cplusplus/draft/blob/97b615a5a6ab0598b624ee05402c531d0421cff6/source/styles.tex#L127-L133
+\renewcommand{\labelitemi}{---}
+\renewcommand{\labelitemii}{---}
+\renewcommand{\labelitemiii}{---}
+\renewcommand{\labelitemiv}{---}
+
+\definecolor{notproposedcolor}{HTML}{7151A8}
+\definecolor{notproposedback}{HTML}{F6F5FA}
+\newmdenv[
+  leftline=true,
+  rightline=false,
+  topline=false,
+  bottomline=false,
+  linewidth=2pt,
+  linecolor=notproposedcolor,
+  backgroundcolor=notproposedback,
+  innerleftmargin=8pt,
+  innerrightmargin=8pt,
+  innertopmargin=7pt,
+  innerbottommargin=7pt,
+  skipabove=\topsep,
+  skipbelow=\topsep
+]{notproposed}
+
+% https://github.com/cplusplus/draft/blob/97b615a5a6ab0598b624ee05402c531d0421cff6/source/layout.tex#L32-L68
+\makeatletter
+\newcommand{\pnum}[1]{%
+\noindent\makebox[0pt][l]{\makebox[0pt][r]{%
+\scriptsize\raisebox{.7ex}{#1}%
+\hspace{\@totalleftmargin}\quad%
+}}\ignorespaces}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={{[}{[}=std::interop{]}{]} An Annotation for Interoperation
+with Targets},
+  pdflang={en},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\hypersetup{pdfcreator={mpark/wg21}}
+
+\makeatletter
+\def\@maketitle{
+  \newpage \null \vskip 2em
+  {\center \LARGE \@title \par}
+  \vskip 1.5em
+  \begin{flushright}
+    \begin{tabular}{ll}
+Document \#:&D0000R0  [\href{https://wg21.link/P0000}{Latest}]
+  [\href{https://wg21.link/P0000/status}{Status}]\\
+Date:       &\@date\\
+Project:    &Programming Language C++\\
+Audience:   &N/A\\
+Reply-to:   \@author
+    \end{tabular}
+  \end{flushright}
+}
+\makeatother
+
+\title{{[}{[}=std::interop{]}{]} An Annotation for Interoperation with
+Targets}
+\author{&Adrian
+Johnston\\&<\href{mailto:ajohnston54637@gmail.com}{\nolinkurl{ajohnston54637@gmail.com}}>\\}
+\date{unassigned}
+
+\begin{document}
+\hypertarget{title-block-header}{\label{title-block-header}}
+\maketitle
+
+\section{\texorpdfstring{Abstract\hyperref[abstract]{}}{Abstract}}\label{abstract}
+
+This paper proposes
+\VERB|\OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{]]}|,
+a standard annotation marking a declaration for exposure to a foreign
+execution environment. The annotation has no effect on the program, and
+the meaning of target names is left unspecified. A reference code
+generator is provided for a number of languages.
+
+\section{\texorpdfstring{Motivation\hyperref[motivation]{}}{Motivation}}\label{motivation}
+
+To propose a standard annotation,
+\VERB|\OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{]]}|,
+marking a declaration for exposure to a foreign execution environment,
+with an optional target list. It has no effect on the program and no
+target list semantics are to be specified. As context,
+\href{https://wg21.link/p3394r4}{{[}P3394R4{]}} supplies the mechanism
+but no vocabulary, so each library will define its own
+\VERB|\NormalTok{exposed\_t}|. By adding
+\VERB|\OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{]]}|
+different libraries and tools should not need to define their own
+\VERB|\NormalTok{exposed\_t}|. This attribute is proposed with the
+intention of it being used as the basis for non-proliferation treaties
+around interoperability annotation. Although, that is hard to control.
+
+\section{\texorpdfstring{Proposal\hyperref[proposal]{}}{Proposal}}\label{proposal}
+
+This proposal adds a class \VERB|\NormalTok{interop\_type}| and a
+constant \VERB|\NormalTok{interop}| of that type to a new header,
+\VERB|\OperatorTok{\textless{}}\NormalTok{interop}\OperatorTok{\textgreater{}}|.
+The \VERB|\NormalTok{interop}| constant and the result of calling it
+with \VERB|\KeywordTok{operator}\OperatorTok{()}| are required to be
+valid annotation operands under
+\href{https://wg21.link/p3394r4}{{[}P3394R4{]}}. The call operator
+accepts any number of arguments convertible to
+\VERB|\NormalTok{string\_view}| and returns a new
+\VERB|\NormalTok{interop\_type}| holding the targets in static storage
+and in call order. \VERB|\NormalTok{targets}\OperatorTok{()}| returns
+that list unmodified, duplicates included, and empty for
+\VERB|\NormalTok{interop}| itself. Embedded nulls in a string literal
+argument are preserved. Whether equal strings in the list share a
+pointer is unspecified.
+
+The proposed interface is as follows, however the implementation is for
+exposition only.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{namespace}\NormalTok{ std }\OperatorTok{\{}
+  \KeywordTok{struct}\NormalTok{ interop\_type }\OperatorTok{\{}
+    \KeywordTok{template}\OperatorTok{\textless{}}\NormalTok{convertible\_to}\OperatorTok{\textless{}}\NormalTok{string\_view}\OperatorTok{\textgreater{}...}\NormalTok{ S}\OperatorTok{\textgreater{}}
+    \KeywordTok{consteval}\NormalTok{ interop\_type }\KeywordTok{operator}\OperatorTok{()(}\KeywordTok{const}\NormalTok{ S}\OperatorTok{\&...}\NormalTok{ s}\OperatorTok{)} \KeywordTok{const} \OperatorTok{\{}
+\NormalTok{      vector}\OperatorTok{\textless{}}\KeywordTok{const} \DataTypeTok{char}\OperatorTok{*\textgreater{}}\NormalTok{ list}\OperatorTok{(}\NormalTok{list\_}\OperatorTok{,}\NormalTok{ list\_ }\OperatorTok{+}\NormalTok{ size\_}\OperatorTok{);}
+      \OperatorTok{(}\NormalTok{list}\OperatorTok{.}\NormalTok{push\_back}\OperatorTok{(}\NormalTok{define\_static\_string}\OperatorTok{(}\NormalTok{whole\_}\OperatorTok{(}\NormalTok{s}\OperatorTok{))),} \OperatorTok{...);}
+      \KeywordTok{auto}\NormalTok{ kept }\OperatorTok{=}\NormalTok{ define\_static\_array}\OperatorTok{(}\NormalTok{list}\OperatorTok{);}
+      \ControlFlowTok{return} \OperatorTok{\{}\NormalTok{kept}\OperatorTok{.}\NormalTok{data}\OperatorTok{(),}\NormalTok{ kept}\OperatorTok{.}\NormalTok{size}\OperatorTok{()\};}
+    \OperatorTok{\}}
+    \KeywordTok{constexpr}\NormalTok{ span}\OperatorTok{\textless{}}\KeywordTok{const} \DataTypeTok{char}\OperatorTok{*} \KeywordTok{const}\OperatorTok{\textgreater{}}\NormalTok{ targets}\OperatorTok{(}\DataTypeTok{void}\OperatorTok{)} \KeywordTok{const} \OperatorTok{\{}
+      \ControlFlowTok{return} \OperatorTok{\{}\NormalTok{list\_}\OperatorTok{,}\NormalTok{ size\_}\OperatorTok{\};}
+    \OperatorTok{\}}
+    \KeywordTok{template}\OperatorTok{\textless{}}\KeywordTok{class}\NormalTok{ S}\OperatorTok{\textgreater{}}
+    \KeywordTok{static} \KeywordTok{consteval}\NormalTok{ string\_view whole\_}\OperatorTok{(}\KeywordTok{const}\NormalTok{ S}\OperatorTok{\&}\NormalTok{ s}\OperatorTok{)} \OperatorTok{\{} \CommentTok{// exposition only}
+      \ControlFlowTok{if} \KeywordTok{constexpr} \OperatorTok{(}\NormalTok{is\_array\_v}\OperatorTok{\textless{}}\NormalTok{S}\OperatorTok{\textgreater{})} \ControlFlowTok{return} \OperatorTok{\{}\NormalTok{s}\OperatorTok{,}\NormalTok{ extent\_v}\OperatorTok{\textless{}}\NormalTok{S}\OperatorTok{\textgreater{}} \OperatorTok{{-}} \DecValTok{1}\OperatorTok{\};}
+      \ControlFlowTok{else} \ControlFlowTok{return}\NormalTok{ s}\OperatorTok{;}
+    \OperatorTok{\}}
+    \KeywordTok{const} \DataTypeTok{char}\OperatorTok{*} \KeywordTok{const}\OperatorTok{*}\NormalTok{ list\_}\OperatorTok{;}                         \CommentTok{// exposition only}
+    \DataTypeTok{size\_t}\NormalTok{ size\_}\OperatorTok{;}                                     \CommentTok{// exposition only}
+  \OperatorTok{\};}
+  \KeywordTok{inline} \KeywordTok{constexpr}\NormalTok{ interop\_type interop}\OperatorTok{\{\};}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+The annotation may appear wherever
+\href{https://wg21.link/p3394r4}{{[}P3394R4{]}} allows one.
+\VERB|\OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{]]}|
+marks a declaration for exposure without naming a target, and
+\VERB|\OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{(}\StringTok{"ECMAScript"}\OperatorTok{,}\AttributeTok{ }\StringTok{"Python"}\OperatorTok{)]]}|
+names a target list. A target list can also be built up using
+\VERB|\NormalTok{std}\OperatorTok{::}\NormalTok{interop}| and reused as
+is the \VERB|\OperatorTok{[[=}\AttributeTok{script}\OperatorTok{]]}|
+attribute below. It is unspecified if annotating a class or namespace
+indicates anything about its members.
+
+What follows is an example involving a thermostat.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{inline} \KeywordTok{constexpr} \KeywordTok{auto}\NormalTok{ script }\OperatorTok{=}\NormalTok{ std}\OperatorTok{::}\NormalTok{interop}\OperatorTok{(}\StringTok{"ECMAScript"}\OperatorTok{,} \StringTok{"Python"}\OperatorTok{);}
+
+\KeywordTok{class} \OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{]]}\NormalTok{ thermostat\_type }\OperatorTok{\{}
+\KeywordTok{public}\OperatorTok{:}
+  \OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{]]} \OperatorTok{\textasciitilde{}}\NormalTok{thermostat\_type}\OperatorTok{(}\DataTypeTok{void}\OperatorTok{)} \OperatorTok{=} \ControlFlowTok{default}\OperatorTok{;}
+
+  \OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{]]} \DataTypeTok{double}\NormalTok{ current\_temp}\OperatorTok{(}\DataTypeTok{void}\OperatorTok{)} \KeywordTok{const}\OperatorTok{;}
+  \OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{]]} \DataTypeTok{double}\NormalTok{ temp\_setting}\OperatorTok{(}\DataTypeTok{void}\OperatorTok{)} \KeywordTok{const}\OperatorTok{;}
+
+  \OperatorTok{[[=}\AttributeTok{script}\OperatorTok{]]} \DataTypeTok{bool}\NormalTok{ furnace\_on}\OperatorTok{(}\DataTypeTok{void}\OperatorTok{)} \KeywordTok{const}\OperatorTok{;}
+  \OperatorTok{[[=}\AttributeTok{script}\OperatorTok{]]} \DataTypeTok{bool}\NormalTok{ fan\_on}\OperatorTok{(}\DataTypeTok{void}\OperatorTok{)} \KeywordTok{const}\OperatorTok{;}
+
+  \OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{(}\StringTok{"Rust"}\OperatorTok{)]]} \DataTypeTok{void}\NormalTok{ set\_temp\_setting}\OperatorTok{(}\DataTypeTok{double}\NormalTok{ t\_}\OperatorTok{);}
+
+\KeywordTok{private}\OperatorTok{:}
+  \CommentTok{// ...}
+\OperatorTok{\};}
+
+\OperatorTok{[[=}\AttributeTok{std}\OperatorTok{::}\AttributeTok{interop}\OperatorTok{]]}\NormalTok{ thermostat\_type thermostat\_factory}\OperatorTok{(}\DataTypeTok{double}\NormalTok{ current}\OperatorTok{,}
+                                                     \DataTypeTok{double}\NormalTok{ setting}\OperatorTok{);}
+\end{Highlighting}
+\end{Shaded}
+
+No change to the existing standard is proposed beyond the inclusion of
+\VERB|\OperatorTok{\textless{}}\NormalTok{interop}\OperatorTok{\textgreater{}}|,
+\VERB|\NormalTok{interop\_type}| and \VERB|\NormalTok{interop}|.
+
+\section{\texorpdfstring{Reference
+Implementation\hyperref[reference-implementation]{}}{Reference Implementation}}\label{reference-implementation}
+
+In order to validate the design, the above code was used to generate a C
+header and to generate bindings for C, ECMAScript, Python and Rust.
+
+Here is the
+\href{https://whatchamacallem.github.io/std_interop/}{website} for the
+outputs. It provides an index of the files generated by the
+\href{https://github.com/whatchamacallem/std_interop}{repository}.
+
+The code generator is
+\href{https://whatchamacallem.github.io/std_interop/interop.cpp.html}{\VERB|\NormalTok{interop}\OperatorTok{.}\NormalTok{cpp}|}
+and it emits 4 bindings and a C header in under 400 LOC. Everything
+passes tests and is formatted correctly.
+
+\section{\texorpdfstring{Design
+Decisions\hyperref[design-decisions]{}}{Design Decisions}}\label{design-decisions}
+
+\begin{itemize}
+\tightlist
+\item
+  Providing a naming system for foreign languages in the C++ standard is
+  recognized as unmaintainable. Other standards are welcome to make
+  recommendations for their own names.
+\item
+  The reference implementation of \VERB|\NormalTok{interop\_type}| uses
+  \VERB|\NormalTok{define\_static\_string}| and
+  \VERB|\NormalTok{define\_static\_array}| from
+  \href{https://wg21.link/p3491r3}{{[}P3491R3{]}}.
+\end{itemize}
+
+\section{\texorpdfstring{Future
+Work\hyperref[future-work]{}}{Future Work}}\label{future-work}
+
+Any modifications to the standard will be described in detail in later
+revisions of this proposal.
+
+\href{https://wg21.link/p3394r4}{{[}P3394R4{]}} permits annotations on
+namespaces, but the meaning of
+\VERB|\NormalTok{std}\OperatorTok{::}\NormalTok{interop}| on a namespace
+for its members is left open. Discussion is needed with independent
+interoperability project maintainers once this proposal is concrete.
+
+\section{\texorpdfstring{References\hyperref[bibliography]{}}{References}}\label{bibliography}
+
+\protect\phantomsection\label{refs}
+\begin{CSLReferences}{0}{0}
+\bibitem[\citeproctext]{ref-P3394R4}
+{[}P3394R4{]} Daveed Vandevoorde, Wyatt Childers, Dan Katz, Barry
+Revzin. 2025-06-20. Annotations for Reflection.
+\href{https://wg21.link/p3394r4}{
+\CSLIndent{https://wg21.link/p3394r4}}
+
+\bibitem[\citeproctext]{ref-P3491R3}
+{[}P3491R3{]} Barry Revzin, Wyatt Childers, Peter Dimov, Daveed
+Vandevoorde. 2025-06-20. define\_static\_\{string,object,array\}.
+\href{https://wg21.link/p3491r3}{
+\CSLIndent{https://wg21.link/p3491r3}}
+
+\end{CSLReferences}
+
+\end{document}

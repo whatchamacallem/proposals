@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="mpark/wg21" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>interop.cpp</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ background-color: #f6f8fa; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { } 
+code span.al { color: #ff0000; } 
+code span.an { } 
+code span.at { } 
+code span.bn { color: #9f6807; } 
+code span.bu { color: #9f6807; } 
+code span.cf { color: #00607c; } 
+code span.ch { color: #9f6807; } 
+code span.cn { } 
+code span.co { color: #6a737d; font-style: italic; } 
+code span.cv { color: #6a737d; font-style: italic; } 
+code span.do { color: #6a737d; } 
+code span.dt { color: #00607c; } 
+code span.dv { color: #9f6807; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #9f6807; } 
+code span.fu { } 
+code span.im { } 
+code span.in { color: #6a737d; } 
+code span.kw { color: #00607c; } 
+code span.op { color: #7b3e91; } 
+code span.ot { } 
+code span.pp { color: #6f4e37; } 
+code span.re { } 
+code span.sc { color: #9f6807; } 
+code span.ss { color: #9f6807; } 
+code span.st { color: #9f6807; } 
+code span.va { } 
+code span.vs { color: #9f6807; } 
+code span.wa { color: #6a737d; font-weight: bold; } 
+</style>
+  <style type="text/css">
+body {
+margin: 5em;
+font-family: serif;
+
+hyphens: auto;
+line-height: 1.35;
+text-align: justify;
+}
+@media screen and (max-width: 30em) {
+body {
+margin: 1.5em;
+}
+}
+div.wrapper {
+max-width: 60em;
+margin: auto;
+}
+ul {
+list-style-type: none;
+padding-left: 2em;
+margin-top: -0.2em;
+margin-bottom: -0.2em;
+}
+a {
+text-decoration: none;
+color: #4183C4;
+}
+a.hidden_link {
+text-decoration: none;
+color: inherit;
+}
+li {
+margin-top: 0.6em;
+margin-bottom: 0.6em;
+}
+h1, h2, h3, h4 {
+position: relative;
+line-height: 1;
+}
+a.self-link {
+position: absolute;
+top: 0;
+left: calc(-1 * (3.5rem - 26px));
+width: calc(3.5rem - 26px);
+height: 2em;
+text-align: center;
+border: none;
+transition: opacity .2s;
+opacity: .5;
+font-family: sans-serif;
+font-weight: normal;
+font-size: 83%;
+}
+a.self-link:hover { opacity: 1; }
+a.self-link::before { content: "§"; }
+ul > li:before {
+content: "\2014";
+position: absolute;
+margin-left: -1.5em;
+}
+:target { background-color: yellow; }
+:target .codeblock { background-color: yellow; }
+:target .sourceCode { background-color: yellow; }
+:target ul { background-color: yellow; }
+p:has(> span.marginalizedparent > a.marginalized:target),
+li:has(> span.marginalizedparent > a.marginalized:target) {
+background-color: yellow;
+}
+a.marginalized:target { background-color: transparent; }
+.abbr_ref { float: right; }
+.folded_abbr_ref { float: right; }
+:target .folded_abbr_ref { display: none; }
+:target .unfolded_abbr_ref { float: right; display: inherit; }
+.unfolded_abbr_ref { display: none; }
+.secnum { display: inline-block; min-width: 35pt; }
+.header-section-number { display: inline-block; min-width: 35pt; }
+.annexnum { display: block; }
+div.sourceLinkParent {
+float: right;
+}
+a.sourceLink {
+position: absolute;
+opacity: 0;
+margin-left: 10pt;
+}
+a.sourceLink:hover {
+opacity: 1;
+}
+a.itemDeclLink {
+position: absolute;
+font-size: 75%;
+text-align: right;
+width: 5em;
+opacity: 0;
+}
+a.itemDeclLink:hover { opacity: 1; }
+span.marginalizedparent {
+position: relative;
+left: -5em;
+}
+li span.marginalizedparent { left: -7em; }
+li ul > li span.marginalizedparent { left: -9em; }
+li ul > li ul > li span.marginalizedparent { left: -11em; }
+li ul > li ul > li ul > li span.marginalizedparent { left: -13em; }
+div.footnoteNumberParent {
+position: relative;
+left: -4.7em;
+}
+a.marginalized {
+position: absolute;
+font-size: 75%;
+text-align: right;
+width: 5em;
+}
+a.enumerated_item_num {
+position: relative;
+left: -3.5em;
+display: inline-block;
+margin-right: -3em;
+text-align: right;
+width: 3em;
+}
+div.para { margin-bottom: 0.6em; margin-top: 0.6em; text-align: justify; }
+div.section { text-align: justify; }
+div.sentence { display: inline; }
+span.indexparent {
+display: inline;
+position: relative;
+float: right;
+right: -1em;
+}
+a.index {
+position: absolute;
+display: none;
+}
+a.index:before { content: "⟵"; }
+
+a.index:target {
+display: inline;
+}
+.indexitems {
+margin-left: 2em;
+text-indent: -2em;
+}
+div.itemdescr {
+margin-left: 3em;
+}
+.bnf {
+font-family: serif;
+margin-left: 40pt;
+margin-top: 0.5em;
+margin-bottom: 0.5em;
+}
+.ncbnf {
+font-family: serif;
+margin-top: 0.5em;
+margin-bottom: 0.5em;
+margin-left: 40pt;
+}
+.ncsimplebnf {
+font-family: serif;
+font-style: italic;
+margin-top: 0.5em;
+margin-bottom: 0.5em;
+margin-left: 40pt;
+background: inherit; 
+}
+span.textnormal {
+font-style: normal;
+font-family: serif;
+white-space: normal;
+display: inline-block;
+}
+span.rlap {
+display: inline-block;
+width: 0px;
+}
+span.descr { font-style: normal; font-family: serif; }
+span.grammarterm { font-style: italic; }
+span.term { font-style: italic; }
+span.terminal { font-family: monospace; font-style: normal; }
+span.nonterminal { font-style: italic; }
+span.tcode { font-family: monospace; font-style: normal; }
+span.textbf { font-weight: bold; }
+span.textsc { font-variant: small-caps; }
+a.nontermdef { font-style: italic; font-family: serif; }
+span.emph { font-style: italic; }
+span.techterm { font-style: italic; }
+span.mathit { font-style: italic; }
+span.mathsf { font-family: sans-serif; }
+span.mathrm { font-family: serif; font-style: normal; }
+span.textrm { font-family: serif; }
+span.textsl { font-style: italic; }
+span.mathtt { font-family: monospace; font-style: normal; }
+span.mbox { font-family: serif; font-style: normal; }
+span.ungap { display: inline-block; width: 2pt; }
+span.textit { font-style: italic; }
+span.texttt { font-family: monospace; }
+span.tcode_in_codeblock { font-family: monospace; font-style: normal; }
+span.phantom { color: white; }
+
+span.math { font-style: normal; }
+span.mathblock {
+display: block;
+margin-left: auto;
+margin-right: auto;
+margin-top: 1.2em;
+margin-bottom: 1.2em;
+text-align: center;
+}
+span.mathalpha {
+font-style: italic;
+}
+span.synopsis {
+font-weight: bold;
+margin-top: 0.5em;
+display: block;
+}
+span.definition {
+font-weight: bold;
+display: block;
+}
+.codeblock {
+margin-left: 1.2em;
+line-height: 127%;
+}
+.outputblock {
+margin-left: 1.2em;
+line-height: 127%;
+}
+div.itemdecl {
+margin-top: 2ex;
+}
+code.itemdeclcode {
+white-space: pre;
+display: block;
+}
+span.textsuperscript {
+vertical-align: super;
+font-size: smaller;
+line-height: 0;
+}
+.footnotenum { vertical-align: super; font-size: smaller; line-height: 0; }
+.footnote {
+font-size: small;
+margin-left: 2em;
+margin-right: 2em;
+margin-top: 0.6em;
+margin-bottom: 0.6em;
+}
+div.minipage {
+display: inline-block;
+margin-right: 3em;
+}
+div.numberedTable {
+text-align: center;
+margin: 2em;
+}
+div.figure {
+text-align: center;
+margin: 2em;
+}
+table {
+border: 1px solid black;
+border-collapse: collapse;
+margin-left: auto;
+margin-right: auto;
+margin-top: 0.8em;
+text-align: left;
+hyphens: none; 
+}
+td, th {
+padding-left: 1em;
+padding-right: 1em;
+vertical-align: top;
+}
+td.empty {
+padding: 0px;
+padding-left: 1px;
+}
+td.left {
+text-align: left;
+}
+td.right {
+text-align: right;
+}
+td.center {
+text-align: center;
+}
+td.justify {
+text-align: justify;
+}
+td.border {
+border-left: 1px solid black;
+}
+tr.rowsep, td.cline {
+border-top: 1px solid black;
+}
+tr.even, tr.odd {
+border-bottom: 1px solid black;
+}
+tr.capsep {
+border-top: 3px solid black;
+border-top-style: double;
+}
+tr.header {
+border-bottom: 3px solid black;
+border-bottom-style: double;
+}
+th {
+border-bottom: 1px solid black;
+}
+span.centry {
+font-weight: bold;
+}
+div.table {
+display: block;
+margin-left: auto;
+margin-right: auto;
+text-align: center;
+width: 90%;
+}
+span.indented {
+display: block;
+margin-left: 2em;
+margin-bottom: 1em;
+margin-top: 1em;
+}
+ol.enumeratea { list-style-type: none; background: inherit; }
+ol.enumerate { list-style-type: none; background: inherit; }
+
+</style>
+  <style type="text/css">:root {
+color-scheme: light;
+--unchanged-color: #898887;
+--add-color: #006e28;
+--rm-color: #bf0303;
+--note-color: #0000ff;
+--not-proposed-color: #7151a8;
+--not-proposed-bg-color: rgba(113, 81, 168, 0.06);
+}
+.document-info {
+display: inline-flex;
+align-items: center;
+gap: 0.3rem;
+}
+.document-link {
+display: inline-block;
+padding: 0 0.4em;
+border: 1px solid var(--toc-border, #d9e1e7);
+border-radius: 0.4rem;
+color: var(--toc-muted, #66727d);
+font: 600 0.8em/1 sans-serif;
+text-decoration: none;
+vertical-align: text-bottom;
+}
+.document-link:hover {
+border-color: var(--toc-hover-border, #bdc9d2);
+background: var(--toc-hover-bg, #f2f6f8);
+color: var(--toc-hover-text, #244d6b);
+}
+.document-link:focus-visible {
+outline: 2px solid var(--toc-accent, #2878b5);
+outline-offset: 1px;
+}
+table thead tr {
+border-bottom: 3px solid black;
+border-bottom-style: double;
+}
+table tbody tr {
+border-bottom: 1px solid black;
+}
+.cmptable {
+width: 100%;
+}
+
+ins, del {
+text-decoration-thickness: 1px;
+}
+
+ins {
+text-underline-offset: 3.5px;
+}
+.add {
+color: var(--add-color);
+}
+.rm {
+color: var(--rm-color);
+}
+code.diff {
+color: var(--unchanged-color);
+}
+code.diff span.va {
+color: var(--add-color);
+}
+code.diff span.st {
+color: var(--rm-color);
+}
+.ednote,
+.draftnote {
+color: var(--note-color);
+}
+
+div.sourceCode {
+padding: 0.5em;
+}
+div.sourceCode:has(> pre.not_proposed) {
+padding: 0.65em 0.8em 0.65em 1.1em;
+border-left: 0.25em solid var(--not-proposed-color);
+background-color: var(--not-proposed-bg-color);
+}
+div.sourceCode:has(> pre.not_proposed)::before {
+content: "\2298\2002 Not proposed";
+display: block;
+margin-bottom: 0.8em;
+color: var(--not-proposed-color);
+font: 600 0.95rem/1.2 sans-serif;
+}
+</style>
+  <style type="text/css">
+#title-block-header > table {
+border: none;
+float: right;
+}
+#title-block-header > table tbody tr {
+border-bottom: none;
+}
+details.collapsed > summary {
+list-style: none;
+cursor: pointer;
+}
+details.collapsed > summary::-webkit-details-marker {
+display: none;
+}
+details.collapsed > summary .collapse-marker {
+--collapse-marker-offset: 0.15em;
+display: inline-block;
+width: 0;
+margin-right: 0.5em;
+height: 0;
+border-top: 0.3em solid transparent;
+border-bottom: 0.3em solid transparent;
+border-left: 0.45em solid currentColor;
+transform: translateX(var(--collapse-marker-offset));
+transform-origin: 0.15em center;
+vertical-align: 0.1em;
+}
+details.collapsed > summary .collapse-marker:first-child {
+--collapse-marker-offset: 0.075em;
+width: calc(35pt - 0.45em);
+margin-right: 0.25em;
+}
+details.collapsed[open] > summary .collapse-marker {
+transform: translateX(var(--collapse-marker-offset)) rotate(90deg);
+}
+details.collapsed > summary > :is(h1, h2, h3, h4, h5, h6) {
+margin-bottom: 0;
+}
+body[data-syntax-highlighting="off"] code.sourceCode:not(.diff) span:not(.add, .rm, .co, .cv, .do, .in) {
+color: inherit !important;
+font-style: inherit !important;
+font-weight: inherit !important;
+text-decoration: inherit !important;
+}
+body[data-deleted-text="hide"] .rm del {
+display: none !important;
+}
+</style>
+  <style type="text/css">
+:root {
+--toc-width: 19rem;
+--toc-right: clamp(1rem, 2vw, 2.5rem);
+--toc-top: 9.5rem;
+--toc-accent: #2878b5;
+--toc-active-bg: #eaf4fb;
+--toc-active-text: #175f91;
+--toc-border: #d9e1e7;
+--toc-heading: #4d5c68;
+--toc-hover-bg: #f2f6f8;
+--toc-hover-border: #bdc9d2;
+--toc-hover-text: #244d6b;
+--toc-muted: #66727d;
+--toc-rail: #dfe6eb;
+--toc-section-number: #89949d;
+--toc-scrollbar: #b8c3cc;
+--toc-surface: rgba(255, 255, 255, 0.96);
+--toc-panel-shadow:
+0 0.75rem 2.25rem rgba(30, 55, 75, 0.08),
+0 0.125rem 0.4rem rgba(30, 55, 75, 0.05);
+--view-controls-bg: rgba(255, 255, 255, 0.96);
+--view-controls-border: #b7c0c8;
+--view-controls-color: #22303c;
+--view-controls-hover: #f3f6f8;
+--view-controls-shadow: 0 0.2rem 0.8rem rgba(34, 48, 60, 0.12);
+}
+
+.view-controls {
+position: sticky;
+top: 0.75rem;
+z-index: 1000;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap: 0.35rem;
+width: fit-content;
+margin-left: auto;
+margin-bottom: 1rem;
+padding: 0.45rem 0.8rem;
+border: 1px solid var(--view-controls-border);
+border-radius: 999px;
+background: var(--view-controls-bg);
+color: var(--view-controls-color);
+font: 600 0.9rem/1.1 sans-serif;
+box-shadow: var(--view-controls-shadow);
+}
+.view-controls:hover {
+background: var(--view-controls-hover);
+}
+.view-controls label {
+display: flex;
+align-items: center;
+gap: 0.45rem;
+}
+.view-controls input {
+margin: 0;
+}
+.view-controls span {
+white-space: nowrap;
+}
+.theme-switcher {
+display: flex;
+align-self: stretch;
+min-width: 0;
+margin: 0 0 0.15rem;
+padding: 0.15rem;
+border: 1px solid var(--toc-border);
+border-radius: 0.5rem;
+}
+.theme-switcher legend {
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+white-space: nowrap;
+border: 0;
+}
+.theme-switcher button {
+display: inline-flex;
+min-width: 0;
+align-items: center;
+justify-content: center;
+gap: 0.3rem;
+flex: 1;
+padding: 0.3rem 0.4rem;
+border: 0;
+border-radius: 0.35rem;
+background: transparent;
+color: var(--toc-muted);
+font: inherit;
+cursor: pointer;
+}
+.theme-switcher button:hover {
+background: var(--toc-hover-bg);
+color: var(--toc-hover-text);
+}
+.theme-switcher button:focus-visible {
+outline: 2px solid var(--toc-accent);
+outline-offset: 1px;
+}
+.theme-switcher button[aria-pressed="true"] {
+background: var(--toc-active-bg);
+color: var(--toc-active-text);
+font-weight: 600;
+}
+.theme-icon {
+font-size: 0.9rem;
+line-height: 1;
+}
+.table-of-contents .toc-progress {
+display: none;
+}
+.toc-mobile-bar,
+.toc-dialog,
+.toc-mobile-title,
+.toc-mobile-trigger,
+.toc-expand-toggle {
+display: none;
+}
+
+@media screen and (max-width: 89.999em) {
+html,
+body {
+max-width: 100%;
+}
+html {
+overflow-x: hidden;
+overflow-x: clip;
+}
+.wrapper {
+max-width: 100%;
+}
+.wrapper div.sourceCode {
+max-width: 100%;
+box-sizing: border-box;
+}
+
+.wrapper .table-wrapper {
+max-width: 100%;
+overflow-x: auto;
+overscroll-behavior-inline: contain;
+}
+body.toc-ready .table-of-contents {
+display: none;
+}
+body.toc-ready :is(h1, h2, h3, h4, h5, h6)[id] {
+scroll-margin-top: 4.5rem;
+}
+body.toc-menu-open {
+overflow: hidden;
+}
+body.toc-ready .toc-mobile-bar {
+position: fixed;
+inset: 0 0 auto;
+z-index: 1100;
+display: flex;
+align-items: center;
+gap: 1rem;
+height: 3.5rem;
+box-sizing: border-box;
+padding:
+0.5rem max(1rem, env(safe-area-inset-right))
+0.5rem max(1rem, env(safe-area-inset-left));
+border-bottom: 1px solid var(--toc-border);
+background: var(--toc-surface);
+box-shadow: 0 0.25rem 1rem rgba(30, 55, 75, 0.08);
+backdrop-filter: blur(0.85rem);
+font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+sans-serif;
+}
+.toc-mobile-bar .view-controls {
+position: static;
+z-index: auto;
+flex-direction: row;
+align-items: center;
+gap: 0.35rem;
+width: auto;
+margin: 0;
+padding: 0;
+border: 0;
+border-radius: 0;
+background: transparent;
+color: var(--toc-muted);
+box-shadow: none;
+font: 600 0.72rem/1 ui-sans-serif, -apple-system, BlinkMacSystemFont,
+"Segoe UI", sans-serif;
+}
+.toc-mobile-bar .view-controls:hover {
+background: transparent;
+}
+.toc-mobile-bar .view-controls label {
+gap: 0.35rem;
+padding: 0.45rem 0.55rem;
+border: 1px solid var(--toc-border);
+border-radius: 0.6rem;
+background: transparent;
+cursor: pointer;
+}
+.toc-mobile-bar .view-controls label:hover {
+border-color: var(--toc-hover-border);
+background: var(--toc-hover-bg);
+color: var(--toc-hover-text);
+}
+.toc-mobile-bar .view-controls input {
+accent-color: var(--toc-accent);
+}
+.toc-mobile-bar .view-controls input:focus-visible {
+outline: 2px solid var(--toc-accent);
+outline-offset: 2px;
+}
+.toc-mobile-bar .theme-switcher {
+align-self: center;
+margin: 0;
+}
+body[data-syntax-highlighting="off"]
+.toc-mobile-bar label[for="no-syntax-highlighting-toggle"],
+body[data-deleted-text="hide"]
+.toc-mobile-bar label[for="hide-deleted-text-toggle"] {
+border-color: color-mix(in srgb,
+var(--toc-accent) 35%, var(--toc-border));
+background: var(--toc-active-bg);
+color: var(--toc-active-text);
+}
+body.toc-ready .toc-mobile-title {
+display: block;
+min-width: 0;
+flex: 1;
+overflow: hidden;
+color: var(--toc-heading);
+font-size: 0.9rem;
+font-weight: 600;
+line-height: 1.2;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+body.toc-ready .toc-mobile-trigger {
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+flex: 0 0 auto;
+padding: 0.45rem 0.65rem;
+border: 1px solid var(--toc-border);
+border-radius: 0.6rem;
+background: transparent;
+color: var(--toc-heading);
+font: 600 0.78rem/1 ui-sans-serif, -apple-system, BlinkMacSystemFont,
+"Segoe UI", sans-serif;
+cursor: pointer;
+}
+.toc-mobile-trigger:hover {
+border-color: var(--toc-hover-border);
+background: var(--toc-hover-bg);
+}
+.toc-mobile-trigger:focus-visible,
+.toc-dialog-close:focus-visible,
+.toc-dialog a:focus-visible {
+outline: 2px solid var(--toc-accent);
+outline-offset: 2px;
+}
+.toc-menu-icon {
+position: relative;
+width: 1rem;
+height: 0.7rem;
+flex: 0 0 auto;
+border-top: 2px solid currentColor;
+border-bottom: 2px solid currentColor;
+box-sizing: border-box;
+}
+.toc-menu-icon::after {
+content: "";
+position: absolute;
+top: 50%;
+left: 0;
+width: 100%;
+border-top: 2px solid currentColor;
+transform: translateY(-50%);
+}
+.toc-dialog[open] {
+position: fixed;
+inset: 0;
+z-index: 1200;
+display: flex;
+flex-direction: column;
+width: min(32rem, calc(100vw - 2rem));
+max-width: none;
+max-height: min(46rem, calc(100dvh - 2rem));
+box-sizing: border-box;
+margin: auto;
+padding: 0;
+overflow: hidden;
+border: 1px solid var(--toc-border);
+border-radius: 1rem;
+background: var(--toc-surface);
+color: var(--toc-muted);
+box-shadow: 0 1.5rem 5rem rgba(20, 35, 45, 0.28);
+font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+sans-serif;
+text-align: left;
+hyphens: none;
+}
+.toc-dialog::backdrop {
+background: rgba(20, 30, 38, 0.45);
+backdrop-filter: blur(0.15rem);
+}
+.toc-dialog-header {
+display: flex;
+flex: 0 0 auto;
+align-items: flex-start;
+gap: 1rem;
+padding: 1rem 1rem 0.9rem 1.15rem;
+border-bottom: 1px solid var(--toc-border);
+}
+.toc-dialog-heading {
+min-width: 0;
+flex: 1;
+}
+.toc-dialog-eyebrow {
+margin: 0 0 0.3rem;
+color: var(--toc-accent);
+font-size: 0.68rem;
+font-weight: 700;
+letter-spacing: 0.11em;
+line-height: 1;
+text-transform: uppercase;
+}
+.toc-dialog-title {
+margin: 0;
+overflow: hidden;
+color: var(--toc-heading);
+font-size: 1rem;
+font-weight: 650;
+line-height: 1.25;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.toc-dialog-close {
+display: grid;
+width: 2rem;
+height: 2rem;
+flex: 0 0 auto;
+place-items: center;
+padding: 0;
+border: 0;
+border-radius: 50%;
+background: transparent;
+color: var(--toc-muted);
+font: 400 1.5rem/1 sans-serif;
+cursor: pointer;
+}
+.toc-dialog-close:hover {
+background: var(--toc-hover-bg);
+color: var(--toc-heading);
+}
+.toc-dialog-nav {
+min-height: 0;
+
+flex: 1 1 auto;
+overflow-y: auto;
+overscroll-behavior: contain;
+padding: 0.75rem 0.8rem 1rem;
+scrollbar-width: thin;
+scrollbar-color: var(--toc-scrollbar) transparent;
+}
+.toc-dialog ul {
+padding-left: 0;
+margin: 0;
+list-style: none;
+}
+.toc-dialog ul ul {
+position: relative;
+padding-left: 0.9rem;
+margin: 0.15rem 0 0.25rem 0.65rem;
+}
+.toc-dialog ul ul::before {
+content: "";
+position: absolute;
+top: 0.2rem;
+bottom: 0.2rem;
+left: 0;
+width: 1px;
+background: var(--toc-rail);
+}
+.toc-dialog li,
+.toc-dialog li > ul {
+display: block;
+margin-top: 0;
+margin-bottom: 0;
+}
+.toc-dialog li::before {
+display: none;
+}
+.toc-dialog a {
+display: block;
+margin: 0.0625rem 0;
+padding: 0.38rem 0.55rem 0.38rem 0.65rem;
+border-left: 2px solid transparent;
+border-radius: 0 0.45rem 0.45rem 0;
+color: var(--toc-muted);
+font-size: 0.875rem;
+line-height: 1.35;
+text-decoration: none;
+overflow-wrap: anywhere;
+}
+.toc-dialog a:hover {
+color: var(--toc-hover-text);
+background: var(--toc-hover-bg);
+}
+.toc-dialog a.active {
+border-left-color: var(--toc-accent);
+background: var(--toc-active-bg);
+color: var(--toc-active-text);
+font-weight: 600;
+}
+.toc-dialog .toc-section-number {
+color: var(--toc-section-number);
+font-variant-numeric: tabular-nums;
+}
+.toc-dialog code,
+.toc-dialog code span {
+color: inherit !important;
+background: transparent !important;
+font-size: 0.96em;
+font-weight: inherit;
+}
+}
+@media screen and (max-width: 30em) {
+a.self-link {
+left: -1.5rem;
+width: 1.5rem;
+}
+body.toc-ready {
+padding-top: 3.25rem;
+}
+.toc-mobile-trigger-label {
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+white-space: nowrap;
+border: 0;
+}
+.toc-mobile-trigger {
+padding-inline: 0.6rem;
+}
+.toc-dialog[open] {
+width: calc(100vw - 1rem);
+max-height: calc(100dvh - 1rem);
+border-radius: 0.875rem;
+}
+}
+@media screen and (max-width: 47.999em) {
+body.toc-ready .toc-mobile-title {
+display: none;
+}
+.toc-mobile-bar .view-controls {
+min-width: 0;
+flex: 1;
+}
+.toc-mobile-bar .view-controls label {
+justify-content: center;
+min-width: 0;
+flex: 1;
+}
+.toc-mobile-bar .theme-label {
+display: none;
+}
+.toc-mobile-bar .theme-switcher button {
+flex: 0 0 auto;
+padding-inline: 0.35rem;
+}
+}
+@media screen and (max-width: 35.999em) {
+.toc-mobile-bar .view-controls > label > span {
+font-size: 0;
+}
+.toc-mobile-bar label[for="no-syntax-highlighting-toggle"] span::after {
+content: "No highlight";
+font-size: 0.72rem;
+}
+.toc-mobile-bar label[for="hide-deleted-text-toggle"] span::after {
+content: "Hide deleted";
+font-size: 0.72rem;
+}
+}
+@media screen and (min-width: 90em) {
+.toc-mobile-bar {
+display: block;
+}
+
+body.has-toc {
+margin-right: calc(
+var(--toc-right) + var(--toc-width) + 2rem
+);
+}
+
+body.has-toc .view-controls {
+position: fixed;
+top: 1rem;
+right: var(--toc-right);
+width: var(--toc-width);
+box-sizing: border-box;
+margin: 0;
+padding: 0.6rem 0.75rem;
+border-color: var(--toc-border);
+border-radius: 0.875rem;
+background: var(--toc-surface);
+color: var(--toc-muted);
+box-shadow: var(--toc-panel-shadow);
+backdrop-filter: blur(0.75rem);
+font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+sans-serif;
+font-size: 0.825rem;
+font-weight: 400;
+line-height: 1.38;
+}
+body.has-toc .view-controls:hover {
+background: var(--toc-surface);
+}
+body.has-toc .view-controls label {
+align-self: stretch;
+padding: 0.3rem 0.55rem 0.3rem 0.6rem;
+border-left: 2px solid transparent;
+border-radius: 0 0.4rem 0.4rem 0;
+cursor: pointer;
+transition:
+background-color 120ms ease,
+color 120ms ease;
+}
+body.has-toc .view-controls label:hover {
+background: var(--toc-hover-bg);
+color: var(--toc-hover-text);
+}
+body.has-toc .view-controls input {
+accent-color: var(--toc-accent);
+}
+body.has-toc .view-controls input:focus-visible {
+outline: 2px solid var(--toc-accent);
+outline-offset: 2px;
+}
+.table-of-contents {
+position: fixed;
+top: var(--toc-top);
+right: var(--toc-right);
+width: var(--toc-width);
+max-height: calc(100vh - var(--toc-top) - 1.5rem);
+box-sizing: border-box;
+overflow-y: auto;
+overscroll-behavior: contain;
+border: 1px solid var(--toc-border);
+border-radius: 0.875rem;
+background: var(--toc-surface);
+box-shadow: var(--toc-panel-shadow);
+scrollbar-width: thin;
+scrollbar-color: var(--toc-scrollbar) transparent;
+font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+sans-serif;
+font-size: 0.825rem;
+line-height: 1.38;
+text-align: left;
+hyphens: none;
+color: var(--toc-muted);
+}
+.table-of-contents .toc-chrome {
+position: sticky;
+top: 0;
+z-index: 2;
+padding: 0.9rem 0.95rem 0.7rem;
+border-bottom: 1px solid var(--toc-border);
+background: var(--toc-surface);
+backdrop-filter: blur(0.75rem);
+}
+.table-of-contents .toc-title-row {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+.table-of-contents .table-of-contents-title {
+display: flex;
+align-items: center;
+gap: 0.55rem;
+min-width: 0;
+flex: 1;
+font-size: 0.72rem;
+font-weight: 700;
+line-height: 1;
+letter-spacing: 0.11em;
+text-transform: uppercase;
+color: #4d5c68;
+border-bottom: none !important;
+margin: 0;
+}
+.table-of-contents .toc-expand-toggle {
+display: inline-flex;
+min-width: 4.7rem;
+align-items: center;
+justify-content: center;
+flex: 0 0 auto;
+padding: 0.3rem 0.45rem;
+border: 1px solid var(--toc-border);
+border-radius: 0.45rem;
+background: transparent;
+color: var(--toc-muted);
+font: 600 0.68rem/1 ui-sans-serif, -apple-system, BlinkMacSystemFont,
+"Segoe UI", sans-serif;
+cursor: pointer;
+transition:
+background-color 120ms ease,
+border-color 120ms ease,
+color 120ms ease;
+}
+.table-of-contents .toc-expand-toggle[hidden] {
+display: none;
+}
+.table-of-contents .toc-expand-toggle:hover {
+border-color: var(--toc-hover-border);
+background: var(--toc-hover-bg);
+color: var(--toc-hover-text);
+}
+.table-of-contents .toc-expand-toggle:focus-visible {
+outline: 2px solid var(--toc-accent);
+outline-offset: 2px;
+}
+.table-of-contents .table-of-contents-title::before {
+content: "";
+width: 0.45rem;
+height: 0.45rem;
+flex: 0 0 auto;
+border-radius: 50%;
+background: var(--toc-accent);
+box-shadow: 0 0 0 0.2rem color-mix(in srgb,
+var(--toc-accent) 14%, transparent);
+}
+.table-of-contents .toc-progress {
+display: block;
+height: 0.1875rem;
+margin-top: 0.75rem;
+overflow: hidden;
+border-radius: 999px;
+background: var(--toc-rail);
+}
+.table-of-contents .toc-progress-bar {
+display: block;
+width: 100%;
+height: 100%;
+border-radius: inherit;
+background: var(--toc-accent);
+transform: scaleX(0);
+transform-origin: left center;
+}
+.table-of-contents > ul {
+padding: 0.65rem 0.75rem 0.8rem;
+margin: 0;
+}
+.table-of-contents ul ul {
+position: relative;
+padding-left: 0.85rem;
+margin: 0.15rem 0 0.25rem 0.55rem;
+}
+.table-of-contents ul ul::before {
+content: "";
+position: absolute;
+top: 0.15rem;
+bottom: 0.2rem;
+left: 0;
+width: 1px;
+background: var(--toc-rail);
+}
+
+body.toc-ready .table-of-contents li > ul {
+display: none;
+}
+body.toc-ready .table-of-contents li.active-path > ul {
+display: block;
+}
+body.toc-ready .table-of-contents.toc-expanded li > ul {
+display: block;
+}
+.table-of-contents li {
+margin: 0;
+}
+.table-of-contents li::before {
+display: none;
+}
+.table-of-contents a {
+display: block;
+margin: 0.0625rem 0;
+padding: 0.3rem 0.55rem 0.3rem 0.6rem;
+border-left: 2px solid transparent;
+border-radius: 0 0.4rem 0.4rem 0;
+color: var(--toc-muted);
+text-decoration: none;
+overflow-wrap: anywhere;
+transition:
+background-color 120ms ease,
+border-color 120ms ease,
+color 120ms ease;
+}
+.table-of-contents a:hover {
+color: var(--toc-hover-text);
+background: var(--toc-hover-bg);
+}
+.table-of-contents a:focus-visible {
+outline: 2px solid var(--toc-accent);
+outline-offset: 1px;
+}
+.table-of-contents a.active {
+color: var(--toc-active-text);
+border-left-color: var(--toc-accent);
+background: var(--toc-active-bg);
+font-weight: 600;
+}
+.table-of-contents .toc-section-number {
+color: var(--toc-section-number);
+font-weight: 400;
+font-variant-numeric: tabular-nums;
+margin-right: 0.2em;
+}
+.table-of-contents a.active .toc-section-number {
+color: inherit;
+opacity: 0.78;
+}
+
+.table-of-contents code,
+.table-of-contents code span {
+color: inherit !important;
+background: transparent !important;
+font-size: 0.96em;
+font-weight: inherit;
+}
+}
+@media screen and (min-width: 90em) and (prefers-reduced-motion: reduce) {
+.table-of-contents a {
+transition: none;
+}
+.table-of-contents .toc-expand-toggle {
+transition: none;
+}
+}
+@media print {
+.view-controls,
+.toc-mobile-bar,
+.toc-dialog {
+display: none;
+}
+}
+</style>
+  <style type="text/css">
+
+
+body[data-syntax-highlighting="off"]
+code.sourceCode:not(.diff)
+span:is(.co, .cv, .do, .in) {
+color: inherit !important;
+font-style: inherit !important;
+}
+body:has(pre.lineAnchors) #title-block-header > table {
+display: none;
+}
+</style>
+  <style id="dark-theme-styles" media="screen and (prefers-color-scheme: dark)">
+
+body {
+background-color: #171717;
+color: #e0e0e0;
+}
+span.mjx-mstyle { color: #e0e0e0 !important }
+a:link { color: #74bdff; }
+a:visited { color: #c38aff; }
+a.hidden_link {
+text-decoration: none;
+color: inherit;
+}
+span.phantom { color: #171717; }
+a.index:before { color: #e0e0e0; background-color: #4b6353; }
+.comment { color: #40f040; }
+.footnote .comment { color: #60ff60; }
+.example .comment { color: #60ff60; }
+.note .comment { color: #60ff60; }
+span.keyword { color: #32eade; }
+span.parenthesis { color: #ff7070; }
+span.curlybracket { color: #ff7070; }
+span.squarebracket { color: #ff7070; }
+span.literal { color: #ffd867; }
+span.literalterminal { color: #ffd867; }
+span.operator { color: #dac6d9; }
+span.anglebracket { color: #dac6d9; }
+span.preprocessordirective { color: #c28c68; }
+table { border-color: #e0e0e0; }
+td.border { border-color: #e0e0e0; }
+td.border { border-left-color: #e0e0e0; }
+tr.rowsep, td.cline { border-top-color: #e0e0e0; }
+tr.capsep { border-top-color: #e0e0e0; }
+th { border-bottom-color: #e0e0e0; }
+.footnoteSeparator { background-color: #e0e0e0; }
+text { fill: #e0e0e0; }
+path { stroke: #e0e0e0; }
+polygon { stroke: #e0e0e0; fill: #e0e0e0; }
+ellipse { stroke: #e0e0e0; }
+:target { background-color: #4b6345; color: #ffffff; }
+:target .codeblock { background-color: #4b6345; }
+:target ul { background-color: #4b6345; }
+:target a:link { color: #9fcdff; }
+:target a:visited { color: #d39aff; }
+:target a.hidden_link { text-decoration: none; color: inherit; }
+:target span.keyword { color: #52faee; }
+:target span.parenthesis { color: #ff4060; font-weight: bold; }
+:target span.curlybracket { color: #ff4060; font-weight: bold; }
+:target span.squarebracket { color: #ff4060; font-weight: bold; }
+:target span.literal { color: #ffe070; }
+:target span.literalterminal { color: #ffe070; }
+:target span.operator { color: #ffffff; }
+:target span.anglebracket { color: #ffffff; }
+:target span.preprocessordirective { color: #e0968f; }
+:target .comment { color: #75ff20; }
+:target .footnote .comment { color: #75ff20; }
+:target .example .comment { color: #75ff20; }
+:target .note .comment { color: #75ff20; }
+
+:root {
+color-scheme: dark;
+--unchanged-color: #e0e0e0;
+--add-color: #d0fddd;
+--rm-color: #ff9b98;
+--note-color: #6699ff;
+--not-proposed-color: #c2a4f5;
+--not-proposed-bg-color: rgba(194, 164, 245, 0.07);
+}
+table thead tr {
+border-bottom-color: #e0e0e0;
+}
+table tbody tr {
+border-bottom-color: #e0e0e0;
+}
+div.sourceCode {
+background-color: rgba(255, 255, 255, 0.03);
+}
+mark {
+background-color: #665c00;
+color: #ffffff;
+}
+code span.al,
+code span.er {
+color: #ff7070;
+}
+code span.cf,
+code span.dt,
+code span.kw {
+color: #32eade;
+}
+code span.bn,
+code span.bu,
+code span.ch,
+code span.dv,
+code span.fl,
+code span.sc,
+code span.ss,
+code span.st,
+code span.vs {
+color: #ffd867;
+}
+code span.co,
+code span.cv,
+code span.do,
+code span.in,
+code span.wa {
+color: #60ff60;
+}
+code span.op {
+color: #dac6d9;
+}
+code span.pp {
+color: #c28c68;
+}
+:target .sourceCode,
+p:has(> span.marginalizedparent > a.marginalized:target),
+li:has(> span.marginalizedparent > a.marginalized:target) {
+background-color: #4b6345;
+}
+
+:root {
+--toc-accent: #62b0eb;
+--toc-active-bg: rgba(70, 145, 200, 0.16);
+--toc-active-text: #84c7f5;
+--toc-border: #3b454e;
+--toc-heading: #d2d9de;
+--toc-hover-bg: rgba(255, 255, 255, 0.055);
+--toc-hover-border: #59636c;
+--toc-hover-text: #dceaf4;
+--toc-muted: #abb5bd;
+--toc-panel-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.28);
+--toc-rail: #414b54;
+--toc-section-number: #7f8a93;
+--toc-scrollbar: #59636c;
+--toc-surface: rgba(28, 28, 28, 0.96);
+--view-controls-bg: rgba(37, 37, 37, 0.96);
+--view-controls-border: #59636c;
+--view-controls-color: #e0e0e0;
+--view-controls-hover: #303030;
+--view-controls-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.4);
+} </style>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const darkStyles = document.getElementById('dark-theme-styles');
+      const storageKey = 'mpark-wg21-theme';
+      const themes = new Set(['system', 'light', 'dark']);
+
+      let theme = 'system';
+      try {
+        const stored = localStorage.getItem(storageKey);
+        if (themes.has(stored)) theme = stored;
+      } catch (_) {
+        // Local storage may be unavailable for local files or restricted contexts.
+      }
+
+      function applyTheme(value, persist) {
+        theme = value;
+        root.dataset.theme = value;
+        darkStyles.media = value === 'dark'
+          ? 'screen'
+          : value === 'light' ? 'not all' : 'screen and (prefers-color-scheme: dark)';
+
+        for (const button of document.querySelectorAll('button[data-theme-value]')) {
+          button.setAttribute('aria-pressed', String(button.dataset.themeValue === value));
+        }
+
+        if (!persist) return;
+        try {
+          if (value === 'system') {
+            localStorage.removeItem(storageKey);
+          } else {
+            localStorage.setItem(storageKey, value);
+          }
+        } catch (_) {
+          // The selected theme still applies for this page.
+        }
+      }
+
+      applyTheme(theme, false);
+      document.addEventListener('DOMContentLoaded', () => {
+        applyTheme(theme, false);
+        for (const button of document.querySelectorAll('button[data-theme-value]')) {
+          button.addEventListener('click', () => applyTheme(button.dataset.themeValue, true));
+        }
+      });
+    })();  </script>
+  <link href="data:image/vnd.microsoft.icon;base64,AAABAAIAEBAAAAEAIABoBAAAJgAAACAgAAABACAAqBAAAI4EAAAoAAAAEAAAACAAAAABACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AIJEAACCRAAAgkQAAIJEAACCRAAAgkQAVoJEAN6CRADegkQAWIJEAACCRAAAgkQAAIJEAACCRAAA////AP///wCCRAAAgkQAAIJEAACCRAAsgkQAvoJEAP+CRAD/gkQA/4JEAP+CRADAgkQALoJEAACCRAAAgkQAAP///wD///8AgkQAAIJEABSCRACSgkQA/IJEAP99PQD/dzMA/3czAP99PQD/gkQA/4JEAPyCRACUgkQAFIJEAAD///8A////AHw+AFiBQwDqgkQA/4BBAP9/PxP/uZd6/9rJtf/bybX/upd7/39AFP+AQQD/gkQA/4FDAOqAQgBc////AP///wDKklv4jlEa/3o7AP+PWC//8+3o///////////////////////z7un/kFox/35AAP+GRwD/mVYA+v///wD///8A0Zpk+NmibP+0d0T/8evj///////+/fv/1sKz/9bCs//9/fr//////+/m2/+NRwL/nloA/5xYAPj///8A////ANKaZPjRmGH/5cKh////////////k149/3UwAP91MQD/lmQ//86rhv+USg3/m1YA/5hSAP+bVgD4////AP///wDSmmT4zpJY/+/bx///////8+TV/8mLT/+TVx//gkIA/5lVAP+VTAD/x6B//7aEVv/JpH7/s39J+P///wD///8A0ppk+M6SWP/u2sf///////Pj1f/Nj1T/2KFs/8mOUv+eWhD/lEsA/8aee/+0glT/x6F7/7J8Rvj///8A////ANKaZPjRmGH/48Cf///////+/v7/2qt//82PVP/OkFX/37KJ/86siv+USg7/mVQA/5hRAP+bVgD4////AP///wDSmmT40ppk/9CVXP/69O////////7+/v/x4M//8d/P//7+/f//////9u7n/6tnJf+XUgD/nFgA+P///wD///8A0ppk+NKaZP/RmWL/1qNy//r07///////////////////////+vXw/9akdP/Wnmn/y5FY/6JfFvj///8A////ANKaZFTSmmTo0ppk/9GYYv/Ql1//5cWm//Hg0P/x4ND/5cWm/9GXYP/RmGH/0ppk/9KaZOjVnmpY////AP///wDSmmQA0ppkEtKaZI7SmmT60ppk/9CWX//OkVb/zpFW/9CWX//SmmT/0ppk/NKaZJDSmmQS0ppkAP///wD///8A0ppkANKaZADSmmQA0ppkKtKaZLrSmmT/0ppk/9KaZP/SmmT/0ppkvNKaZCrSmmQA0ppkANKaZAD///8A////ANKaZADSmmQA0ppkANKaZADSmmQA0ppkUtKaZNzSmmTc0ppkVNKaZADSmmQA0ppkANKaZADSmmQA////AP5/AAD4HwAA4AcAAMADAACAAQAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAMADAADgBwAA+B8AAP5/AAAoAAAAIAAAAEAAAAABACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AP///wCCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRAAAgkQAAIJEAAyCRACMgkQA6oJEAOqCRACQgkQAEIJEAACCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRAAA////AP///wD///8A////AIJEAACCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRABigkQA5oJEAP+CRAD/gkQA/4JEAP+CRADqgkQAZoJEAACCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRAAAgkQAAIJEAAD///8A////AP///wD///8AgkQAAIJEAACCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRAA4gkQAwoJEAP+CRAD/gkQA/4JEAP+CRAD/gkQA/4JEAP+CRAD/gkQAxIJEADyCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRAAAgkQAAP///wD///8A////AP///wCCRAAAgkQAAIJEAACCRAAAgkQAAIJEAACCRAAWgkQAmIJEAP+CRAD/gkQA/4JEAP+CRAD/gkQA/4JEAP+CRAD/gkQA/4JEAP+CRAD/gkQA/4JEAJyCRAAYgkQAAIJEAACCRAAAgkQAAIJEAACCRAAA////AP///wD///8A////AIJEAACCRAAAgkQAAIJEAACCRAAAgkQAdIJEAPCCRAD/gkQA/4JEAP+CRAD/gkQA/4JEAP+CRAD/gkQA/4JEAP+CRAD/gkQA/4JEAP+CRAD/gkQA/4JEAPSCRAB4gkQAAIJEAACCRAAAgkQAAIJEAAD///8A////AP///wD///8AgkQAAIJEAACCRAAAgkQASoJEANKCRAD/gkQA/4JEAP+CRAD/g0YA/39AAP9zLgD/bSQA/2shAP9rIQD/bSQA/3MuAP9/PwD/g0YA/4JEAP+CRAD/gkQA/4JEAP+CRADUgkQAToJEAACCRAAAgkQAAP///wD///8A////AP///wB+PwAAgkUAIoJEAKiCRAD/gkQA/4JEAP+CRAD/hEcA/4BBAP9sIwD/dTAA/5RfKv+viF7/vp56/76ee/+wiF7/lWAr/3YxAP9sIwD/f0AA/4RHAP+CRAD/gkQA/4JEAP+CRAD/gkQArIJEACaBQwAA////AP///wD///8A////AIBCAEBzNAD6f0EA/4NFAP+CRAD/gkQA/4VIAP92MwD/bSUA/6N1Tv/ezsL/////////////////////////////////38/D/6V3Uv9uJgD/dTEA/4VJAP+CRAD/gkQA/4JEAP+BQwD/fUAA/4FDAEj///8A////AP///wD///8AzJRd5qBlKf91NgD/dDUA/4JEAP+FSQD/cy4A/3YyAP/PuKP//////////////////////////////////////////////////////9K7qP94NQD/ciwA/4VJAP+CRAD/fkEA/35BAP+LSwD/mlYA6v///wD///8A////AP///wDdpnL/4qx3/8KJUv+PUhf/cTMA/3AsAP90LgD/4dK+/////////////////////////////////////////////////////////////////+TYxf91MAD/dTIA/31CAP+GRwD/llQA/6FcAP+gWwD8////AP///wD///8A////ANGZY/LSm2X/4ap3/92mcP+wdT3/byQA/8mwj////////////////////////////////////////////////////////////////////////////+LYxv9zLgP/jUoA/59bAP+hXAD/nFgA/5xYAPL///8A////AP///wD///8A0ppk8tKaZP/RmWL/1p9q/9ubXv/XqXj////////////////////////////7+fD/vZyG/6BxS/+gcUr/vJuE//r37f//////////////////////3MOr/5dQBf+dVQD/nVkA/5xYAP+cWAD/nFgA8v///wD///8A////AP///wDSmmTy0ppk/9KaZP/SmWP/yohJ//jo2P//////////////////////4NTG/4JDFf9lGAD/bSQA/20kAP9kGAD/fz8S/+Xb0f//////5NG9/6txN/+LOgD/m1QA/51aAP+cWAD/m1cA/5xYAP+cWADy////AP///wD///8A////ANKaZPLSmmT/0ppk/8+TWf/Unmv//v37//////////////////////+TWRr/VwsA/35AAP+ERgD/g0UA/4JGAP9lHgD/kFga/8KXX/+TRwD/jT4A/49CAP+VTQD/n10A/5xYAP+OQQD/lk4A/55cAPL///8A////AP///wD///8A0ppk8tKaZP/SmmT/y4tO/92yiP//////////////////////8NnE/8eCQP+rcTT/ez0A/3IyAP98PgD/gEMA/5FSAP+USwD/jj8A/5lUAP+JNwD/yqV2/694Mf+HNQD/jkAA/82rf/+laBj/jT4A8v///wD///8A////AP///wDSmmTy0ppk/9KaZP/LiUr/4byY///////////////////////gupX/0I5P/+Wuev/Lklz/l1sj/308AP+QSwD/ol0A/59aAP+aVQD/k0oA/8yoh///////+fXv/6pwO//Lp3v///////Pr4f+oay7y////AP///wD///8A////ANKaZPLSmmT/0ppk/8uJSv/hvJj//////////////////////+G7l//Jhkb/0ppk/96nc//fqXX/x4xO/6dkFP+QSQD/llEA/5xXAP+USgD/yaOA///////38uv/qG05/8ijdv//////8efb/6ZpLPL///8A////AP///wD///8A0ppk8tKaZP/SmmT/zIxO/9yxh///////////////////////7dbA/8iEQf/Sm2X/0Zlj/9ScZv/eqHf/2KJv/7yAQf+XTgD/iToA/5lSAP+JNgD/yKFv/611LP+HNQD/jT8A/8qmeP+kZRT/jT4A8v///wD///8A////AP///wDSmmTy0ppk/9KaZP/Pk1n/1J5q//78+//////////////////+/fv/1aFv/8iEQv/Tm2b/0ppl/9GZY//Wn2z/1pZc/9eldf/Bl2b/kUcA/4w9AP+OQAD/lUwA/59eAP+cWQD/jT8A/5ZOAP+eXADy////AP///wD///8A////ANKaZPLSmmT/0ppk/9KZY//KiEn/8d/P///////////////////////47+f/05tm/8iCP//KiEj/yohJ/8eCP//RmGH//vfy///////n1sP/rXQ7/4k4AP+TTAD/nVoA/5xYAP+cVwD/nFgA/5xYAPL///8A////AP///wD///8A0ppk8tKaZP/SmmT/0ptl/8uLTf/aq37////////////////////////////+/fz/6c2y/961jv/etY7/6Myx//78+v//////////////////////3MWv/5xXD/+ORAD/mFQA/51ZAP+cWAD/nFgA8v///wD///8A////AP///wDSmmTy0ppk/9KaZP/SmmT/0ppk/8mFRP/s1b//////////////////////////////////////////////////////////////////////////////+PD/0JFU/7NzMv+WUQD/kUsA/5tXAP+dWQDy////AP///wD///8A////ANKaZP/SmmT/0ppk/9KaZP/Sm2X/z5NZ/8yMT//z5NX/////////////////////////////////////////////////////////////////9Ofa/8yNUP/UmGH/36p5/8yTWv+qaSD/kksA/5ROAPz///8A////AP///wD///8A0ppk5NKaZP/SmmT/0ppk/9KaZP/TnGf/zY9T/82OUv/t1sD//////////////////////////////////////////////////////+7Yw//OkFX/zI5R/9OcZ//SmmP/26V0/9ymdf/BhUf/ol8R6P///wD///8A////AP///wDSmmQ80ppk9tKaZP/SmmT/0ppk/9KaZP/TnGj/zpFW/8qJSv/dson/8uHS//////////////////////////////////Lj0//etIv/y4lL/86QVf/TnGj/0ppk/9KaZP/RmWP/05xn/9ymdfjUnWdC////AP///wD///8A////ANKaZADSmmQc0ppkotKaZP/SmmT/0ppk/9KaZP/Tm2b/0Zli/8qJSf/NjlH/16Z3/+G8mP/myKr/5siq/+G8mP/Xp3f/zY5S/8qISf/RmGH/05tm/9KaZP/SmmT/0ppk/9KaZP/SmmSm0pljINWdaQD///8A////AP///wD///8A0ppkANKaZADSmmQA0ppkQtKaZMrSmmT/0ppk/9KaZP/SmmT/0ptl/9GYYf/Nj1P/y4lL/8qISP/KiEj/y4lK/82PU//RmGH/0ptl/9KaZP/SmmT/0ppk/9KaZP/SmmTO0ppkRtKaZADSmmQA0ppkAP///wD///8A////AP///wDSmmQA0ppkANKaZADSmmQA0ppkANKaZGzSmmTu0ppk/9KaZP/SmmT/0ppk/9KaZP/SmmT/0ppk/9KaZP/SmmT/0ppk/9KaZP/SmmT/0ppk/9KaZP/SmmTw0ppkcNKaZADSmmQA0ppkANKaZADSmmQA////AP///wD///8A////ANKaZADSmmQA0ppkANKaZADSmmQA0ppkANKaZBLSmmSQ0ppk/9KaZP/SmmT/0ppk/9KaZP/SmmT/0ppk/9KaZP/SmmT/0ppk/9KaZP/SmmT/0ppklNKaZBTSmmQA0ppkANKaZADSmmQA0ppkANKaZAD///8A////AP///wD///8A0ppkANKaZADSmmQA0ppkANKaZADSmmQA0ppkANKaZADSmmQy0ppkutKaZP/SmmT/0ppk/9KaZP/SmmT/0ppk/9KaZP/SmmT/0ppkvtKaZDbSmmQA0ppkANKaZADSmmQA0ppkANKaZADSmmQA0ppkAP///wD///8A////AP///wDSmmQA0ppkANKaZADSmmQA0ppkANKaZADSmmQA0ppkANKaZADSmmQA0ppkXNKaZODSmmT/0ppk/9KaZP/SmmT/0ppk5NKaZGDSmmQA0ppkANKaZADSmmQA0ppkANKaZADSmmQA0ppkANKaZADSmmQA////AP///wD///8A////ANKaZADSmmQA0ppkANKaZADSmmQA0ppkANKaZADSmmQA0ppkANKaZADSmmQA0ppkBtKaZIbSmmTo0ppk6tKaZIrSmmQK0ppkANKaZADSmmQA0ppkANKaZADSmmQA0ppkANKaZADSmmQA0ppkANKaZAD///8A////AP/8P///+B///+AH//+AAf//AAD//AAAP/AAAA/gAAAHwAAAA8AAAAPAAAADwAAAA8AAAAPAAAADwAAAA8AAAAPAAAADwAAAA8AAAAPAAAADwAAAA8AAAAPAAAADwAAAA+AAAAfwAAAP/AAAP/8AAP//gAH//+AH///4H////D//" rel="icon" />
+  
+</head>
+<body data-syntax-highlighting="on" data-deleted-text="show">
+<form class="view-controls">
+<fieldset class="theme-switcher">
+<legend>Theme</legend>
+<button type="button" data-theme-value="system" aria-label="Use system theme" aria-pressed="true" title="Use system theme">
+<span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">System</span>
+</button>
+<button type="button" data-theme-value="light" aria-label="Use light theme" aria-pressed="false" title="Use light theme">
+<span class="theme-icon" aria-hidden="true">☀</span><span class="theme-label">Light</span>
+</button>
+<button type="button" data-theme-value="dark" aria-label="Use dark theme" aria-pressed="false" title="Use dark theme">
+<span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark</span>
+</button>
+</fieldset>
+<label for="no-syntax-highlighting-toggle">
+<input id="no-syntax-highlighting-toggle" type="checkbox"></input>
+<span>No syntax highlighting</span>
+</label>
+<label for="hide-deleted-text-toggle">
+<input id="hide-deleted-text-toggle" type="checkbox"></input>
+<span>Hide deleted text</span>
+</label>
+</form><div class="wrapper">
+<header id="title-block-header">
+<h1 class="title" style="text-align:center">interop.cpp [<a href="https://whatchamacallem.github.io/std_interop/interop.cpp">raw</a>]
+[<a href="index.html">back</a>]</h1>
+<table>
+  <tr>
+    <td>Document #:</td>
+    <td>
+      <span class="document-info">
+        <span>D0000R0</span>
+      <a class="document-link" href="https://wg21.link/P0000">Latest</a>
+      <a class="document-link" href="https://wg21.link/P0000/status">Status</a>
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td>Date:</td>
+    <td>unassigned</td>
+  </tr>
+  <tr>
+    <td style="vertical-align:top">Project:</td>
+    <td>Programming Language C++</td>
+  </tr>
+  <tr>
+    <td style="vertical-align:top">Audience:</td>
+    <td>
+      N/A<br>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align:top">Reply-to:</td>
+    <td>
+      Adrian Johnston<br>&lt;<a href="mailto:ajohnston54637@gmail.com" class="email">ajohnston54637@gmail.com</a>&gt;<br>
+    </td>
+  </tr>
+</table>
+</header>
+<div style="clear:both">
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource cpp raw numberLines lineAnchors"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">// </span><span class="an">SPDX-FileCopyrightText:</span><span class="co"> © 2026 Adrian Johnston.</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">// </span><span class="an">SPDX-License-Identifier:</span><span class="co"> MIT</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">// This file is licensed under the terms of the LICENSE.md file.</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="pp">#include </span><span class="im">&quot;interop.hpp&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="pp">#include </span><span class="im">&lt;algorithm&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="pp">#include </span><span class="im">&lt;format&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="pp">#include </span><span class="im">&lt;fstream&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="pp">#include </span><span class="im">&lt;meta&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="pp">#include </span><span class="im">&lt;optional&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="pp">#include </span><span class="im">&lt;ranges&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="pp">#include </span><span class="im">&lt;string_view&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="pp">#include </span><span class="im">&lt;vector&gt;</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="kw">namespace</span> tool <span class="op">{</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a>  <span class="kw">constexpr</span> <span class="kw">auto</span> ctx <span class="op">=</span> std<span class="op">::</span>meta<span class="op">::</span>access_context<span class="op">::</span>current<span class="op">();</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a>  <span class="kw">constexpr</span> std<span class="op">::</span>string_view license <span class="op">=</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>      <span class="st">&quot;</span><span class="sc">{0}</span><span class="st"> SPDX-FileCopyrightText: © 2026 Adrian Johnston.</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>      <span class="st">&quot;</span><span class="sc">{0}</span><span class="st"> SPDX-License-Identifier: MIT</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a>      <span class="st">&quot;</span><span class="sc">{0}</span><span class="st"> This file is licensed under the terms of the LICENSE.md file.</span><span class="sc">\n\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a></span>
+<span id="cb1-25"><a href="#cb1-25"></a>  <span class="kw">struct</span> c_header <span class="op">{</span></span>
+<span id="cb1-26"><a href="#cb1-26"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view language <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> <span class="kw">const</span> <span class="dt">char</span><span class="op">*</span> file <span class="op">=</span> <span class="st">&quot;interop_generated.h&quot;</span><span class="op">;</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view comment <span class="op">=</span> <span class="st">&quot;//&quot;</span><span class="op">;</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view file_body <span class="op">=</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a>        <span class="st">&quot;#pragma once</span><span class="sc">\n\n</span><span class="st">&quot;</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a>        <span class="st">&quot;#include &lt;stdbool.h&gt;</span><span class="sc">\n\n</span><span class="st">&quot;</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a>        <span class="st">&quot;#ifdef __cplusplus</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a>        <span class="st">&quot;extern </span><span class="sc">\&quot;</span><span class="st">C</span><span class="sc">\&quot;</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a>        <span class="st">&quot;#endif</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a>        <span class="st">&quot;</span><span class="sc">{0}{1}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a>        <span class="st">&quot;#ifdef __cplusplus</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a>        <span class="st">&quot;</span><span class="sc">}}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a>        <span class="st">&quot;#endif</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign_declaration <span class="op">=</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a>        <span class="st">&quot;</span><span class="sc">{2}</span><span class="st"> </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view class_body <span class="op">=</span> <span class="st">&quot;</span><span class="sc">\n{1}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view destructor <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view method <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view void_method <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view function <span class="op">=</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">void* </span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view parameter <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign <span class="op">=</span> <span class="st">&quot;</span><span class="sc">{1}</span><span class="st"> </span><span class="sc">{0}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view handle <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-49"><a href="#cb1-49"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view receiver <span class="op">=</span> <span class="st">&quot;void* self&quot;</span><span class="op">;</span></span>
+<span id="cb1-50"><a href="#cb1-50"></a></span>
+<span id="cb1-51"><a href="#cb1-51"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view self<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-52"><a href="#cb1-52"></a>      <span class="cf">return</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-53"><a href="#cb1-53"></a>    <span class="op">}</span></span>
+<span id="cb1-54"><a href="#cb1-54"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view type<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-55"><a href="#cb1-55"></a>      <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>display_string_of<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-56"><a href="#cb1-56"></a>    <span class="op">}</span></span>
+<span id="cb1-57"><a href="#cb1-57"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view hint<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-58"><a href="#cb1-58"></a>      <span class="cf">return</span> type<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-59"><a href="#cb1-59"></a>    <span class="op">}</span></span>
+<span id="cb1-60"><a href="#cb1-60"></a>  <span class="op">};</span></span>
+<span id="cb1-61"><a href="#cb1-61"></a></span>
+<span id="cb1-62"><a href="#cb1-62"></a>  <span class="kw">struct</span> c_source <span class="op">{</span></span>
+<span id="cb1-63"><a href="#cb1-63"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view language <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-64"><a href="#cb1-64"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> <span class="kw">const</span> <span class="dt">char</span><span class="op">*</span> file <span class="op">=</span> <span class="st">&quot;interop_generated.cpp&quot;</span><span class="op">;</span></span>
+<span id="cb1-65"><a href="#cb1-65"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view comment <span class="op">=</span> <span class="st">&quot;//&quot;</span><span class="op">;</span></span>
+<span id="cb1-66"><a href="#cb1-66"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view file_body <span class="op">=</span></span>
+<span id="cb1-67"><a href="#cb1-67"></a>        <span class="st">&quot;#include </span><span class="sc">\&quot;</span><span class="st">interop.hpp</span><span class="sc">\&quot;\n\n</span><span class="st">&quot;</span></span>
+<span id="cb1-68"><a href="#cb1-68"></a>        <span class="st">&quot;extern </span><span class="sc">\&quot;</span><span class="st">C</span><span class="sc">\&quot;</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-69"><a href="#cb1-69"></a>        <span class="st">&quot;</span><span class="sc">{0}{1}}}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-70"><a href="#cb1-70"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign_declaration <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-71"><a href="#cb1-71"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view class_body <span class="op">=</span> <span class="st">&quot;</span><span class="sc">\n{2}{3}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-72"><a href="#cb1-72"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view destructor <span class="op">=</span></span>
+<span id="cb1-73"><a href="#cb1-73"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">void </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">) noexcept </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-74"><a href="#cb1-74"></a>        <span class="st">&quot;  delete static_cast&lt;</span><span class="sc">{3}</span><span class="st">*&gt;(self);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-75"><a href="#cb1-75"></a>        <span class="st">&quot;</span><span class="sc">}}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-76"><a href="#cb1-76"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view method <span class="op">=</span></span>
+<span id="cb1-77"><a href="#cb1-77"></a>        <span class="st">&quot;</span><span class="sc">{2}</span><span class="st"> </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">) noexcept </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-78"><a href="#cb1-78"></a>        <span class="st">&quot;  return static_cast&lt;</span><span class="sc">{3}</span><span class="st">*&gt;(self)-&gt;</span><span class="sc">{0}</span><span class="st">(</span><span class="sc">{4}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-79"><a href="#cb1-79"></a>        <span class="st">&quot;</span><span class="sc">}}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-80"><a href="#cb1-80"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view void_method <span class="op">=</span></span>
+<span id="cb1-81"><a href="#cb1-81"></a>        <span class="st">&quot;void </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">) noexcept </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-82"><a href="#cb1-82"></a>        <span class="st">&quot;  static_cast&lt;</span><span class="sc">{3}</span><span class="st">*&gt;(self)-&gt;</span><span class="sc">{0}</span><span class="st">(</span><span class="sc">{4}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-83"><a href="#cb1-83"></a>        <span class="st">&quot;</span><span class="sc">}}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-84"><a href="#cb1-84"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view function <span class="op">=</span></span>
+<span id="cb1-85"><a href="#cb1-85"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">void* </span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">) noexcept </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-86"><a href="#cb1-86"></a>        <span class="st">&quot;  return new auto(::</span><span class="sc">{0}</span><span class="st">(</span><span class="sc">{4}</span><span class="st">));</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-87"><a href="#cb1-87"></a>        <span class="st">&quot;</span><span class="sc">}}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-88"><a href="#cb1-88"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view parameter <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-89"><a href="#cb1-89"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign <span class="op">=</span> <span class="st">&quot;</span><span class="sc">{1}</span><span class="st"> </span><span class="sc">{0}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-90"><a href="#cb1-90"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view handle <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-91"><a href="#cb1-91"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view receiver <span class="op">=</span> <span class="st">&quot;void* self&quot;</span><span class="op">;</span></span>
+<span id="cb1-92"><a href="#cb1-92"></a></span>
+<span id="cb1-93"><a href="#cb1-93"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view self<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-94"><a href="#cb1-94"></a>      <span class="cf">return</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-95"><a href="#cb1-95"></a>    <span class="op">}</span></span>
+<span id="cb1-96"><a href="#cb1-96"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view type<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-97"><a href="#cb1-97"></a>      <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>display_string_of<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-98"><a href="#cb1-98"></a>    <span class="op">}</span></span>
+<span id="cb1-99"><a href="#cb1-99"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view hint<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-100"><a href="#cb1-100"></a>      <span class="cf">return</span> type<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-101"><a href="#cb1-101"></a>    <span class="op">}</span></span>
+<span id="cb1-102"><a href="#cb1-102"></a>  <span class="op">};</span></span>
+<span id="cb1-103"><a href="#cb1-103"></a></span>
+<span id="cb1-104"><a href="#cb1-104"></a>  <span class="kw">struct</span> ecmascript <span class="op">{</span></span>
+<span id="cb1-105"><a href="#cb1-105"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view language <span class="op">=</span> <span class="st">&quot;ECMAScript&quot;</span><span class="op">;</span></span>
+<span id="cb1-106"><a href="#cb1-106"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> <span class="kw">const</span> <span class="dt">char</span><span class="op">*</span> file <span class="op">=</span> <span class="st">&quot;interop_generated.js&quot;</span><span class="op">;</span></span>
+<span id="cb1-107"><a href="#cb1-107"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view comment <span class="op">=</span> <span class="st">&quot;//&quot;</span><span class="op">;</span></span>
+<span id="cb1-108"><a href="#cb1-108"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view file_body <span class="op">=</span></span>
+<span id="cb1-109"><a href="#cb1-109"></a>        <span class="st">&quot;const koffi = require(</span><span class="sc">\&quot;</span><span class="st">koffi</span><span class="sc">\&quot;</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-110"><a href="#cb1-110"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">const lib = koffi.load(</span><span class="sc">\&quot;</span><span class="st">libinterop.so</span><span class="sc">\&quot;</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-111"><a href="#cb1-111"></a>        <span class="st">&quot;</span><span class="sc">{0}{1}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-112"><a href="#cb1-112"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign_declaration <span class="op">=</span></span>
+<span id="cb1-113"><a href="#cb1-113"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">const </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_ = lib.func(</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-114"><a href="#cb1-114"></a>        <span class="st">&quot;  </span><span class="sc">\&quot;{2}</span><span class="st"> </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">)</span><span class="sc">\&quot;</span><span class="st">,</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-115"><a href="#cb1-115"></a>        <span class="st">&quot;);</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-116"><a href="#cb1-116"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view class_body <span class="op">=</span></span>
+<span id="cb1-117"><a href="#cb1-117"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">koffi.alias(</span><span class="sc">\&quot;{0}\&quot;</span><span class="st">, </span><span class="sc">\&quot;</span><span class="st">void*</span><span class="sc">\&quot;</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-118"><a href="#cb1-118"></a>        <span class="st">&quot;</span><span class="sc">{1}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-119"><a href="#cb1-119"></a>        <span class="st">&quot;const </span><span class="sc">{0}</span><span class="st"> = </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-120"><a href="#cb1-120"></a>        <span class="st">&quot;</span><span class="sc">{2}{3}}}</span><span class="st">;</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-121"><a href="#cb1-121"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view destructor <span class="op">=</span></span>
+<span id="cb1-122"><a href="#cb1-122"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">  [Symbol.dispose]() </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-123"><a href="#cb1-123"></a>        <span class="st">&quot;    </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-124"><a href="#cb1-124"></a>        <span class="st">&quot;  </span><span class="sc">}}</span><span class="st">,</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-125"><a href="#cb1-125"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view method <span class="op">=</span></span>
+<span id="cb1-126"><a href="#cb1-126"></a>        <span class="st">&quot;  </span><span class="sc">{0}</span><span class="st">(</span><span class="sc">{1}</span><span class="st">) </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-127"><a href="#cb1-127"></a>        <span class="st">&quot;    return </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-128"><a href="#cb1-128"></a>        <span class="st">&quot;  </span><span class="sc">}}</span><span class="st">,</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-129"><a href="#cb1-129"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view void_method <span class="op">=</span> method<span class="op">;</span></span>
+<span id="cb1-130"><a href="#cb1-130"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view function <span class="op">=</span></span>
+<span id="cb1-131"><a href="#cb1-131"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">const </span><span class="sc">{0}</span><span class="st">_ = lib.func(</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-132"><a href="#cb1-132"></a>        <span class="st">&quot;  </span><span class="sc">\&quot;{2}</span><span class="st"> </span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">)</span><span class="sc">\&quot;</span><span class="st">,</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-133"><a href="#cb1-133"></a>        <span class="st">&quot;);</span><span class="sc">\n\n</span><span class="st">&quot;</span></span>
+<span id="cb1-134"><a href="#cb1-134"></a>        <span class="st">&quot;exports.</span><span class="sc">{0}</span><span class="st"> = (</span><span class="sc">{1}</span><span class="st">) =&gt; </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-135"><a href="#cb1-135"></a>        <span class="st">&quot;  return Object.create(</span><span class="sc">{2}</span><span class="st">, </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-136"><a href="#cb1-136"></a>        <span class="st">&quot;    handle: </span><span class="sc">{{</span><span class="st"> value: </span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">) </span><span class="sc">}}</span><span class="st">,</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-137"><a href="#cb1-137"></a>        <span class="st">&quot;  </span><span class="sc">}}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-138"><a href="#cb1-138"></a>        <span class="st">&quot;</span><span class="sc">}}</span><span class="st">;</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-139"><a href="#cb1-139"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view parameter <span class="op">=</span> <span class="st">&quot;</span><span class="sc">{0}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-140"><a href="#cb1-140"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign <span class="op">=</span> <span class="st">&quot;</span><span class="sc">{1}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-141"><a href="#cb1-141"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view handle <span class="op">=</span> <span class="st">&quot;this.handle&quot;</span><span class="op">;</span></span>
+<span id="cb1-142"><a href="#cb1-142"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view receiver <span class="op">=</span> <span class="st">&quot;void*&quot;</span><span class="op">;</span></span>
+<span id="cb1-143"><a href="#cb1-143"></a></span>
+<span id="cb1-144"><a href="#cb1-144"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view self<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-145"><a href="#cb1-145"></a>      <span class="cf">return</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-146"><a href="#cb1-146"></a>    <span class="op">}</span></span>
+<span id="cb1-147"><a href="#cb1-147"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view type<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-148"><a href="#cb1-148"></a>      <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>display_string_of<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-149"><a href="#cb1-149"></a>    <span class="op">}</span></span>
+<span id="cb1-150"><a href="#cb1-150"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view hint<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-151"><a href="#cb1-151"></a>      <span class="cf">return</span> type<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-152"><a href="#cb1-152"></a>    <span class="op">}</span></span>
+<span id="cb1-153"><a href="#cb1-153"></a>  <span class="op">};</span></span>
+<span id="cb1-154"><a href="#cb1-154"></a></span>
+<span id="cb1-155"><a href="#cb1-155"></a>  <span class="kw">struct</span> python <span class="op">{</span></span>
+<span id="cb1-156"><a href="#cb1-156"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view language <span class="op">=</span> <span class="st">&quot;Python&quot;</span><span class="op">;</span></span>
+<span id="cb1-157"><a href="#cb1-157"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> <span class="kw">const</span> <span class="dt">char</span><span class="op">*</span> file <span class="op">=</span> <span class="st">&quot;interop_generated.py&quot;</span><span class="op">;</span></span>
+<span id="cb1-158"><a href="#cb1-158"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view comment <span class="op">=</span> <span class="st">&quot;#&quot;</span><span class="op">;</span></span>
+<span id="cb1-159"><a href="#cb1-159"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view file_body <span class="op">=</span></span>
+<span id="cb1-160"><a href="#cb1-160"></a>        <span class="st">&quot;import ctypes</span><span class="sc">\n\n</span><span class="st">&quot;</span></span>
+<span id="cb1-161"><a href="#cb1-161"></a>        <span class="st">&quot;lib = ctypes.CDLL(</span><span class="sc">\&quot;</span><span class="st">libinterop.so</span><span class="sc">\&quot;</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-162"><a href="#cb1-162"></a>        <span class="st">&quot;</span><span class="sc">{0}{1}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-163"><a href="#cb1-163"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign_declaration <span class="op">=</span></span>
+<span id="cb1-164"><a href="#cb1-164"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">lib.</span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_.restype = </span><span class="sc">{2}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-165"><a href="#cb1-165"></a>        <span class="st">&quot;lib.</span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_.argtypes = [</span><span class="sc">{5}</span><span class="st">]</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-166"><a href="#cb1-166"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view class_body <span class="op">=</span></span>
+<span id="cb1-167"><a href="#cb1-167"></a>        <span class="st">&quot;</span><span class="sc">{1}\n\n</span><span class="st">&quot;</span></span>
+<span id="cb1-168"><a href="#cb1-168"></a>        <span class="st">&quot;class </span><span class="sc">{0}</span><span class="st">(ctypes.c_void_p):</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-169"><a href="#cb1-169"></a>        <span class="st">&quot;</span><span class="sc">{2}{3}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-170"><a href="#cb1-170"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view destructor <span class="op">=</span></span>
+<span id="cb1-171"><a href="#cb1-171"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">    def __del__(</span><span class="sc">{1}</span><span class="st">) -&gt; </span><span class="sc">{6}</span><span class="st">:</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-172"><a href="#cb1-172"></a>        <span class="st">&quot;        lib.</span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-173"><a href="#cb1-173"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view method <span class="op">=</span></span>
+<span id="cb1-174"><a href="#cb1-174"></a>        <span class="st">&quot;    def </span><span class="sc">{0}</span><span class="st">(</span><span class="sc">{1}</span><span class="st">) -&gt; </span><span class="sc">{6}</span><span class="st">:</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-175"><a href="#cb1-175"></a>        <span class="st">&quot;        return lib.</span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-176"><a href="#cb1-176"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view void_method <span class="op">=</span> method<span class="op">;</span></span>
+<span id="cb1-177"><a href="#cb1-177"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view function <span class="op">=</span></span>
+<span id="cb1-178"><a href="#cb1-178"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">lib.</span><span class="sc">{0}</span><span class="st">_.restype = </span><span class="sc">{2}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-179"><a href="#cb1-179"></a>        <span class="st">&quot;lib.</span><span class="sc">{0}</span><span class="st">_.argtypes = [</span><span class="sc">{5}</span><span class="st">]</span><span class="sc">\n\n\n</span><span class="st">&quot;</span></span>
+<span id="cb1-180"><a href="#cb1-180"></a>        <span class="st">&quot;def </span><span class="sc">{0}</span><span class="st">(</span><span class="sc">{1}</span><span class="st">) -&gt; </span><span class="sc">{6}</span><span class="st">:</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-181"><a href="#cb1-181"></a>        <span class="st">&quot;    return lib.</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-182"><a href="#cb1-182"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view parameter <span class="op">=</span> <span class="st">&quot;</span><span class="sc">{0}</span><span class="st">: </span><span class="sc">{2}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-183"><a href="#cb1-183"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign <span class="op">=</span> <span class="st">&quot;</span><span class="sc">{1}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-184"><a href="#cb1-184"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view handle <span class="op">=</span> <span class="st">&quot;self&quot;</span><span class="op">;</span></span>
+<span id="cb1-185"><a href="#cb1-185"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view receiver <span class="op">=</span> <span class="st">&quot;ctypes.c_void_p&quot;</span><span class="op">;</span></span>
+<span id="cb1-186"><a href="#cb1-186"></a></span>
+<span id="cb1-187"><a href="#cb1-187"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view self<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-188"><a href="#cb1-188"></a>      <span class="cf">return</span> <span class="st">&quot;self&quot;</span><span class="op">;</span></span>
+<span id="cb1-189"><a href="#cb1-189"></a>    <span class="op">}</span></span>
+<span id="cb1-190"><a href="#cb1-190"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view type<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-191"><a href="#cb1-191"></a>      <span class="cf">return</span> t <span class="op">==</span> <span class="op">^^</span><span class="dt">void</span>     <span class="op">?</span> <span class="st">&quot;None&quot;</span></span>
+<span id="cb1-192"><a href="#cb1-192"></a>             <span class="op">:</span> t <span class="op">==</span> <span class="op">^^</span><span class="dt">double</span> <span class="op">?</span> <span class="st">&quot;ctypes.c_double&quot;</span></span>
+<span id="cb1-193"><a href="#cb1-193"></a>             <span class="op">:</span> t <span class="op">==</span> <span class="op">^^</span><span class="dt">bool</span>   <span class="op">?</span> <span class="st">&quot;ctypes.c_bool&quot;</span></span>
+<span id="cb1-194"><a href="#cb1-194"></a>                             <span class="op">:</span> std<span class="op">::</span>meta<span class="op">::</span>display_string_of<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-195"><a href="#cb1-195"></a>    <span class="op">}</span></span>
+<span id="cb1-196"><a href="#cb1-196"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view hint<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-197"><a href="#cb1-197"></a>      <span class="cf">return</span> t <span class="op">==</span> <span class="op">^^</span><span class="dt">void</span>     <span class="op">?</span> <span class="st">&quot;None&quot;</span></span>
+<span id="cb1-198"><a href="#cb1-198"></a>             <span class="op">:</span> t <span class="op">==</span> <span class="op">^^</span><span class="dt">double</span> <span class="op">?</span> <span class="st">&quot;float&quot;</span></span>
+<span id="cb1-199"><a href="#cb1-199"></a>             <span class="op">:</span> t <span class="op">==</span> <span class="op">^^</span><span class="dt">bool</span>   <span class="op">?</span> <span class="st">&quot;bool&quot;</span></span>
+<span id="cb1-200"><a href="#cb1-200"></a>                             <span class="op">:</span> std<span class="op">::</span>meta<span class="op">::</span>display_string_of<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-201"><a href="#cb1-201"></a>    <span class="op">}</span></span>
+<span id="cb1-202"><a href="#cb1-202"></a>  <span class="op">};</span></span>
+<span id="cb1-203"><a href="#cb1-203"></a></span>
+<span id="cb1-204"><a href="#cb1-204"></a>  <span class="kw">struct</span> rust <span class="op">{</span></span>
+<span id="cb1-205"><a href="#cb1-205"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view language <span class="op">=</span> <span class="st">&quot;Rust&quot;</span><span class="op">;</span></span>
+<span id="cb1-206"><a href="#cb1-206"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> <span class="kw">const</span> <span class="dt">char</span><span class="op">*</span> file <span class="op">=</span> <span class="st">&quot;interop_generated.rs&quot;</span><span class="op">;</span></span>
+<span id="cb1-207"><a href="#cb1-207"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view comment <span class="op">=</span> <span class="st">&quot;//&quot;</span><span class="op">;</span></span>
+<span id="cb1-208"><a href="#cb1-208"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view file_body <span class="op">=</span></span>
+<span id="cb1-209"><a href="#cb1-209"></a>        <span class="st">&quot;use std::ffi::c_void;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-210"><a href="#cb1-210"></a>        <span class="st">&quot;</span><span class="sc">{0}{1}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-211"><a href="#cb1-211"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign_declaration <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-212"><a href="#cb1-212"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view class_body <span class="op">=</span></span>
+<span id="cb1-213"><a href="#cb1-213"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">#[allow(non_camel_case_types)]</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-214"><a href="#cb1-214"></a>        <span class="st">&quot;#[repr(transparent)]</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-215"><a href="#cb1-215"></a>        <span class="st">&quot;pub struct </span><span class="sc">{0}</span><span class="st">(*mut c_void);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-216"><a href="#cb1-216"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">impl </span><span class="sc">{0}</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-217"><a href="#cb1-217"></a>        <span class="st">&quot;</span><span class="sc">{2}}}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-218"><a href="#cb1-218"></a>        <span class="st">&quot;</span><span class="sc">{3}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-219"><a href="#cb1-219"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view destructor <span class="op">=</span></span>
+<span id="cb1-220"><a href="#cb1-220"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">impl Drop for </span><span class="sc">{3}</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-221"><a href="#cb1-221"></a>        <span class="st">&quot;    fn drop(</span><span class="sc">{1}</span><span class="st">) </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-222"><a href="#cb1-222"></a>        <span class="st">&quot;        unsafe extern </span><span class="sc">\&quot;</span><span class="st">C</span><span class="sc">\&quot;</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-223"><a href="#cb1-223"></a>        <span class="st">&quot;            safe fn </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-224"><a href="#cb1-224"></a>        <span class="st">&quot;        </span><span class="sc">}}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-225"><a href="#cb1-225"></a>        <span class="st">&quot;        </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-226"><a href="#cb1-226"></a>        <span class="st">&quot;    </span><span class="sc">}}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-227"><a href="#cb1-227"></a>        <span class="st">&quot;</span><span class="sc">}}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-228"><a href="#cb1-228"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view method <span class="op">=</span></span>
+<span id="cb1-229"><a href="#cb1-229"></a>        <span class="st">&quot;    #[must_use]</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-230"><a href="#cb1-230"></a>        <span class="st">&quot;    pub fn </span><span class="sc">{0}</span><span class="st">(</span><span class="sc">{1}</span><span class="st">) -&gt; </span><span class="sc">{2}</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-231"><a href="#cb1-231"></a>        <span class="st">&quot;        unsafe extern </span><span class="sc">\&quot;</span><span class="st">C</span><span class="sc">\&quot;</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-232"><a href="#cb1-232"></a>        <span class="st">&quot;            safe fn </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">) -&gt; </span><span class="sc">{2}</span><span class="st">;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-233"><a href="#cb1-233"></a>        <span class="st">&quot;        </span><span class="sc">}}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-234"><a href="#cb1-234"></a>        <span class="st">&quot;        </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-235"><a href="#cb1-235"></a>        <span class="st">&quot;    </span><span class="sc">}}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-236"><a href="#cb1-236"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view void_method <span class="op">=</span></span>
+<span id="cb1-237"><a href="#cb1-237"></a>        <span class="st">&quot;    pub fn </span><span class="sc">{0}</span><span class="st">(</span><span class="sc">{1}</span><span class="st">) </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-238"><a href="#cb1-238"></a>        <span class="st">&quot;        unsafe extern </span><span class="sc">\&quot;</span><span class="st">C</span><span class="sc">\&quot;</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-239"><a href="#cb1-239"></a>        <span class="st">&quot;            safe fn </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-240"><a href="#cb1-240"></a>        <span class="st">&quot;        </span><span class="sc">}}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-241"><a href="#cb1-241"></a>        <span class="st">&quot;        </span><span class="sc">{3}</span><span class="st">_</span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">);</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-242"><a href="#cb1-242"></a>        <span class="st">&quot;    </span><span class="sc">}}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-243"><a href="#cb1-243"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view function <span class="op">=</span></span>
+<span id="cb1-244"><a href="#cb1-244"></a>        <span class="st">&quot;</span><span class="sc">\n</span><span class="st">#[must_use]</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-245"><a href="#cb1-245"></a>        <span class="st">&quot;pub fn </span><span class="sc">{0}</span><span class="st">(</span><span class="sc">{1}</span><span class="st">) -&gt; </span><span class="sc">{2}</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-246"><a href="#cb1-246"></a>        <span class="st">&quot;    unsafe extern </span><span class="sc">\&quot;</span><span class="st">C</span><span class="sc">\&quot;</span><span class="st"> </span><span class="sc">{{\n</span><span class="st">&quot;</span></span>
+<span id="cb1-247"><a href="#cb1-247"></a>        <span class="st">&quot;        safe fn </span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{5}</span><span class="st">) -&gt; </span><span class="sc">{2}</span><span class="st">;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-248"><a href="#cb1-248"></a>        <span class="st">&quot;    </span><span class="sc">}}\n</span><span class="st">&quot;</span></span>
+<span id="cb1-249"><a href="#cb1-249"></a>        <span class="st">&quot;    </span><span class="sc">{0}</span><span class="st">_(</span><span class="sc">{4}</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb1-250"><a href="#cb1-250"></a>        <span class="st">&quot;</span><span class="sc">}}\n</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-251"><a href="#cb1-251"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view parameter <span class="op">=</span> <span class="st">&quot;</span><span class="sc">{0}</span><span class="st">: </span><span class="sc">{1}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-252"><a href="#cb1-252"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view foreign <span class="op">=</span> <span class="st">&quot;_: </span><span class="sc">{1}</span><span class="st">&quot;</span><span class="op">;</span></span>
+<span id="cb1-253"><a href="#cb1-253"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view handle <span class="op">=</span> <span class="st">&quot;self.0&quot;</span><span class="op">;</span></span>
+<span id="cb1-254"><a href="#cb1-254"></a>    <span class="kw">static</span> <span class="kw">constexpr</span> std<span class="op">::</span>string_view receiver <span class="op">=</span> <span class="st">&quot;_: *mut c_void&quot;</span><span class="op">;</span></span>
+<span id="cb1-255"><a href="#cb1-255"></a></span>
+<span id="cb1-256"><a href="#cb1-256"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view self<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info fn<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-257"><a href="#cb1-257"></a>      <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>is_const<span class="op">(</span>fn<span class="op">)</span> <span class="op">?</span> <span class="st">&quot;&amp;self&quot;</span> <span class="op">:</span> <span class="st">&quot;&amp;mut self&quot;</span><span class="op">;</span></span>
+<span id="cb1-258"><a href="#cb1-258"></a>    <span class="op">}</span></span>
+<span id="cb1-259"><a href="#cb1-259"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view type<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-260"><a href="#cb1-260"></a>      <span class="cf">return</span> t <span class="op">==</span> <span class="op">^^</span><span class="dt">double</span> <span class="op">?</span> <span class="st">&quot;f64&quot;</span> <span class="op">:</span> std<span class="op">::</span>meta<span class="op">::</span>display_string_of<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-261"><a href="#cb1-261"></a>    <span class="op">}</span></span>
+<span id="cb1-262"><a href="#cb1-262"></a>    <span class="kw">static</span> <span class="kw">consteval</span> std<span class="op">::</span>string_view hint<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-263"><a href="#cb1-263"></a>      <span class="cf">return</span> type<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb1-264"><a href="#cb1-264"></a>    <span class="op">}</span></span>
+<span id="cb1-265"><a href="#cb1-265"></a>  <span class="op">};</span></span>
+<span id="cb1-266"><a href="#cb1-266"></a></span>
+<span id="cb1-267"><a href="#cb1-267"></a>  <span class="kw">consteval</span> std<span class="op">::</span>optional<span class="op">&lt;</span>std<span class="op">::</span>interop_type<span class="op">&gt;</span> annotation_of<span class="op">(</span></span>
+<span id="cb1-268"><a href="#cb1-268"></a>      std<span class="op">::</span>meta<span class="op">::</span>info decl<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-269"><a href="#cb1-269"></a>    <span class="kw">auto</span> found <span class="op">=</span></span>
+<span id="cb1-270"><a href="#cb1-270"></a>        std<span class="op">::</span>meta<span class="op">::</span>annotations_of_with_type<span class="op">(</span>decl<span class="op">,</span> <span class="op">^^</span>std<span class="op">::</span>interop_type<span class="op">);</span></span>
+<span id="cb1-271"><a href="#cb1-271"></a>    <span class="cf">if</span> <span class="op">(</span>found<span class="op">.</span>empty<span class="op">())</span> <span class="cf">return</span> std<span class="op">::</span>nullopt<span class="op">;</span></span>
+<span id="cb1-272"><a href="#cb1-272"></a>    <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>extract<span class="op">&lt;</span>std<span class="op">::</span>interop_type<span class="op">&gt;(</span>found<span class="op">[</span><span class="dv">0</span><span class="op">]);</span></span>
+<span id="cb1-273"><a href="#cb1-273"></a>  <span class="op">}</span></span>
+<span id="cb1-274"><a href="#cb1-274"></a></span>
+<span id="cb1-275"><a href="#cb1-275"></a>  <span class="kw">consteval</span> <span class="dt">bool</span> binds_to<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info fn<span class="op">,</span> std<span class="op">::</span>string_view language<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-276"><a href="#cb1-276"></a>    <span class="kw">auto</span> annotation <span class="op">=</span> annotation_of<span class="op">(</span>fn<span class="op">);</span></span>
+<span id="cb1-277"><a href="#cb1-277"></a>    <span class="cf">if</span> <span class="op">(!</span>annotation<span class="op">)</span> <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb1-278"><a href="#cb1-278"></a>    <span class="cf">if</span> <span class="op">(</span>annotation<span class="op">-&gt;</span>targets<span class="op">().</span>empty<span class="op">()</span> <span class="op">&amp;&amp;</span> std<span class="op">::</span>meta<span class="op">::</span>is_class_member<span class="op">(</span>fn<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb1-279"><a href="#cb1-279"></a>      annotation <span class="op">=</span></span>
+<span id="cb1-280"><a href="#cb1-280"></a>          annotation_of<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>parent_of<span class="op">(</span>fn<span class="op">)).</span>value_or<span class="op">(*</span>annotation<span class="op">);</span></span>
+<span id="cb1-281"><a href="#cb1-281"></a>    <span class="op">}</span></span>
+<span id="cb1-282"><a href="#cb1-282"></a>    <span class="cf">return</span> language<span class="op">.</span>empty<span class="op">()</span> <span class="op">||</span> annotation<span class="op">-&gt;</span>targets<span class="op">().</span>empty<span class="op">()</span> <span class="op">||</span></span>
+<span id="cb1-283"><a href="#cb1-283"></a>           std<span class="op">::</span>ranges<span class="op">::</span>contains<span class="op">(</span>annotation<span class="op">-&gt;</span>targets<span class="op">(),</span> language<span class="op">);</span></span>
+<span id="cb1-284"><a href="#cb1-284"></a>  <span class="op">}</span></span>
+<span id="cb1-285"><a href="#cb1-285"></a></span>
+<span id="cb1-286"><a href="#cb1-286"></a>  <span class="kw">consteval</span> std<span class="op">::</span>vector<span class="op">&lt;</span>std<span class="op">::</span>meta<span class="op">::</span>info<span class="op">&gt;</span> bound_functions<span class="op">(</span></span>
+<span id="cb1-287"><a href="#cb1-287"></a>      std<span class="op">::</span>meta<span class="op">::</span>info scope<span class="op">,</span> std<span class="op">::</span>string_view language<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-288"><a href="#cb1-288"></a>    <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>members_of<span class="op">(</span>scope<span class="op">,</span> ctx<span class="op">)</span> <span class="op">|</span></span>
+<span id="cb1-289"><a href="#cb1-289"></a>           std<span class="op">::</span>views<span class="op">::</span>filter<span class="op">([=](</span>std<span class="op">::</span>meta<span class="op">::</span>info m<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-290"><a href="#cb1-290"></a>             <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>is_function<span class="op">(</span>m<span class="op">)</span> <span class="op">&amp;&amp;</span> binds_to<span class="op">(</span>m<span class="op">,</span> language<span class="op">);</span></span>
+<span id="cb1-291"><a href="#cb1-291"></a>           <span class="op">})</span> <span class="op">|</span></span>
+<span id="cb1-292"><a href="#cb1-292"></a>           std<span class="op">::</span>ranges<span class="op">::</span>to<span class="op">&lt;</span>std<span class="op">::</span>vector<span class="op">&gt;();</span></span>
+<span id="cb1-293"><a href="#cb1-293"></a>  <span class="op">}</span></span>
+<span id="cb1-294"><a href="#cb1-294"></a></span>
+<span id="cb1-295"><a href="#cb1-295"></a>  <span class="kw">consteval</span> std<span class="op">::</span>vector<span class="op">&lt;</span>std<span class="op">::</span>meta<span class="op">::</span>info<span class="op">&gt;</span> bound_classes<span class="op">(</span></span>
+<span id="cb1-296"><a href="#cb1-296"></a>      std<span class="op">::</span>string_view language<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-297"><a href="#cb1-297"></a>    <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>members_of<span class="op">(^^::,</span> ctx<span class="op">)</span> <span class="op">|</span></span>
+<span id="cb1-298"><a href="#cb1-298"></a>           std<span class="op">::</span>views<span class="op">::</span>filter<span class="op">([=](</span>std<span class="op">::</span>meta<span class="op">::</span>info d<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-299"><a href="#cb1-299"></a>             <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>is_type<span class="op">(</span>d<span class="op">)</span> <span class="op">&amp;&amp;</span> std<span class="op">::</span>meta<span class="op">::</span>is_class_type<span class="op">(</span>d<span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span id="cb1-300"><a href="#cb1-300"></a>                    std<span class="op">::</span>meta<span class="op">::</span>is_complete_type<span class="op">(</span>d<span class="op">)</span> <span class="op">&amp;&amp;</span></span>
+<span id="cb1-301"><a href="#cb1-301"></a>                    <span class="op">!</span>bound_functions<span class="op">(</span>d<span class="op">,</span> language<span class="op">).</span>empty<span class="op">();</span></span>
+<span id="cb1-302"><a href="#cb1-302"></a>           <span class="op">})</span> <span class="op">|</span></span>
+<span id="cb1-303"><a href="#cb1-303"></a>           std<span class="op">::</span>ranges<span class="op">::</span>to<span class="op">&lt;</span>std<span class="op">::</span>vector<span class="op">&gt;();</span></span>
+<span id="cb1-304"><a href="#cb1-304"></a>  <span class="op">}</span></span>
+<span id="cb1-305"><a href="#cb1-305"></a></span>
+<span id="cb1-306"><a href="#cb1-306"></a>  <span class="kw">consteval</span> std<span class="op">::</span>string_view callable_name<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info fn<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-307"><a href="#cb1-307"></a>    <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>is_destructor<span class="op">(</span>fn<span class="op">)</span> <span class="op">?</span> <span class="st">&quot;delete&quot;</span></span>
+<span id="cb1-308"><a href="#cb1-308"></a>                                        <span class="op">:</span> std<span class="op">::</span>meta<span class="op">::</span>identifier_of<span class="op">(</span>fn<span class="op">);</span></span>
+<span id="cb1-309"><a href="#cb1-309"></a>  <span class="op">}</span></span>
+<span id="cb1-310"><a href="#cb1-310"></a></span>
+<span id="cb1-311"><a href="#cb1-311"></a>  <span class="kw">consteval</span> std<span class="op">::</span>meta<span class="op">::</span>info result_type<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info fn<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-312"><a href="#cb1-312"></a>    <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>is_destructor<span class="op">(</span>fn<span class="op">)</span> <span class="op">?</span> <span class="op">^^</span><span class="dt">void</span></span>
+<span id="cb1-313"><a href="#cb1-313"></a>                                        <span class="op">:</span> std<span class="op">::</span>meta<span class="op">::</span>return_type_of<span class="op">(</span>fn<span class="op">);</span></span>
+<span id="cb1-314"><a href="#cb1-314"></a>  <span class="op">}</span></span>
+<span id="cb1-315"><a href="#cb1-315"></a></span>
+<span id="cb1-316"><a href="#cb1-316"></a>  <span class="kw">consteval</span> std<span class="op">::</span>string_view scope_name<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>info fn<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-317"><a href="#cb1-317"></a>    <span class="cf">return</span> std<span class="op">::</span>meta<span class="op">::</span>is_class_member<span class="op">(</span>fn<span class="op">)</span></span>
+<span id="cb1-318"><a href="#cb1-318"></a>               <span class="op">?</span> std<span class="op">::</span>meta<span class="op">::</span>identifier_of<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>parent_of<span class="op">(</span>fn<span class="op">))</span></span>
+<span id="cb1-319"><a href="#cb1-319"></a>               <span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb1-320"><a href="#cb1-320"></a>  <span class="op">}</span></span>
+<span id="cb1-321"><a href="#cb1-321"></a></span>
+<span id="cb1-322"><a href="#cb1-322"></a>  std<span class="op">::</span>string comma_list<span class="op">(</span><span class="kw">const</span> std<span class="op">::</span>vector<span class="op">&lt;</span>std<span class="op">::</span>string<span class="op">&gt;&amp;</span> items<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-323"><a href="#cb1-323"></a>    <span class="kw">auto</span> filled <span class="op">=</span> <span class="op">[](</span><span class="kw">const</span> std<span class="op">::</span>string<span class="op">&amp;</span> item<span class="op">)</span> <span class="op">{</span> <span class="cf">return</span> <span class="op">!</span>item<span class="op">.</span>empty<span class="op">();</span> <span class="op">};</span></span>
+<span id="cb1-324"><a href="#cb1-324"></a>    <span class="cf">return</span> std<span class="op">::</span>format<span class="op">(</span><span class="st">&quot;{:n:}&quot;</span><span class="op">,</span> items <span class="op">|</span> std<span class="op">::</span>views<span class="op">::</span>filter<span class="op">(</span>filled<span class="op">));</span></span>
+<span id="cb1-325"><a href="#cb1-325"></a>  <span class="op">}</span></span>
+<span id="cb1-326"><a href="#cb1-326"></a></span>
+<span id="cb1-327"><a href="#cb1-327"></a>  <span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> L<span class="op">,</span> std<span class="op">::</span>meta<span class="op">::</span>info Fn<span class="op">,</span> <span class="kw">const</span> std<span class="op">::</span>string_view<span class="op">&amp;</span> Format<span class="op">&gt;</span></span>
+<span id="cb1-328"><a href="#cb1-328"></a>  std<span class="op">::</span>string format_callable<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-329"><a href="#cb1-329"></a>    std<span class="op">::</span>vector<span class="op">&lt;</span>std<span class="op">::</span>string<span class="op">&gt;</span> parameters<span class="op">,</span> arguments<span class="op">,</span> foreign<span class="op">;</span></span>
+<span id="cb1-330"><a href="#cb1-330"></a>    <span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>is_class_member<span class="op">(</span>Fn<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb1-331"><a href="#cb1-331"></a>      parameters<span class="op">.</span>emplace_back<span class="op">(</span>L<span class="op">::</span>self<span class="op">(</span>Fn<span class="op">));</span></span>
+<span id="cb1-332"><a href="#cb1-332"></a>      arguments<span class="op">.</span>emplace_back<span class="op">(</span>L<span class="op">::</span>handle<span class="op">);</span></span>
+<span id="cb1-333"><a href="#cb1-333"></a>      foreign<span class="op">.</span>emplace_back<span class="op">(</span>L<span class="op">::</span>receiver<span class="op">);</span></span>
+<span id="cb1-334"><a href="#cb1-334"></a>    <span class="op">}</span></span>
+<span id="cb1-335"><a href="#cb1-335"></a>    <span class="kw">template</span> <span class="cf">for</span> <span class="op">(</span><span class="kw">constexpr</span> std<span class="op">::</span>meta<span class="op">::</span>info p <span class="op">:</span></span>
+<span id="cb1-336"><a href="#cb1-336"></a>        std<span class="op">::</span>define_static_array<span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>parameters_of<span class="op">(</span>Fn<span class="op">)))</span> <span class="op">{</span></span>
+<span id="cb1-337"><a href="#cb1-337"></a>      <span class="kw">constexpr</span> std<span class="op">::</span>string_view name <span class="op">=</span> std<span class="op">::</span>meta<span class="op">::</span>identifier_of<span class="op">(</span>p<span class="op">);</span></span>
+<span id="cb1-338"><a href="#cb1-338"></a>      <span class="kw">constexpr</span> std<span class="op">::</span>meta<span class="op">::</span>info type <span class="op">=</span> std<span class="op">::</span>meta<span class="op">::</span>type_of<span class="op">(</span>p<span class="op">);</span></span>
+<span id="cb1-339"><a href="#cb1-339"></a>      parameters<span class="op">.</span>push_back<span class="op">(</span></span>
+<span id="cb1-340"><a href="#cb1-340"></a>          std<span class="op">::</span>format<span class="op">(</span>L<span class="op">::</span>parameter<span class="op">,</span> name<span class="op">,</span> L<span class="op">::</span>type<span class="op">(</span>type<span class="op">),</span> L<span class="op">::</span>hint<span class="op">(</span>type<span class="op">)));</span></span>
+<span id="cb1-341"><a href="#cb1-341"></a>      arguments<span class="op">.</span>emplace_back<span class="op">(</span>name<span class="op">);</span></span>
+<span id="cb1-342"><a href="#cb1-342"></a>      foreign<span class="op">.</span>push_back<span class="op">(</span>std<span class="op">::</span>format<span class="op">(</span>L<span class="op">::</span>foreign<span class="op">,</span> name<span class="op">,</span> L<span class="op">::</span>type<span class="op">(</span>type<span class="op">)));</span></span>
+<span id="cb1-343"><a href="#cb1-343"></a>    <span class="op">}</span></span>
+<span id="cb1-344"><a href="#cb1-344"></a>    <span class="kw">constexpr</span> std<span class="op">::</span>meta<span class="op">::</span>info result <span class="op">=</span> result_type<span class="op">(</span>Fn<span class="op">);</span></span>
+<span id="cb1-345"><a href="#cb1-345"></a>    <span class="cf">return</span> std<span class="op">::</span>format<span class="op">(</span>Format<span class="op">,</span> callable_name<span class="op">(</span>Fn<span class="op">),</span> comma_list<span class="op">(</span>parameters<span class="op">),</span></span>
+<span id="cb1-346"><a href="#cb1-346"></a>                       L<span class="op">::</span>type<span class="op">(</span>result<span class="op">),</span> scope_name<span class="op">(</span>Fn<span class="op">),</span> comma_list<span class="op">(</span>arguments<span class="op">),</span></span>
+<span id="cb1-347"><a href="#cb1-347"></a>                       comma_list<span class="op">(</span>foreign<span class="op">),</span> L<span class="op">::</span>hint<span class="op">(</span>result<span class="op">));</span></span>
+<span id="cb1-348"><a href="#cb1-348"></a>  <span class="op">}</span></span>
+<span id="cb1-349"><a href="#cb1-349"></a></span>
+<span id="cb1-350"><a href="#cb1-350"></a>  <span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> L<span class="op">&gt;</span></span>
+<span id="cb1-351"><a href="#cb1-351"></a>  <span class="dt">void</span> generate_bindings<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-352"><a href="#cb1-352"></a>    std<span class="op">::</span>string classes<span class="op">;</span></span>
+<span id="cb1-353"><a href="#cb1-353"></a>    <span class="kw">template</span> <span class="cf">for</span> <span class="op">(</span><span class="kw">constexpr</span> std<span class="op">::</span>meta<span class="op">::</span>info cls <span class="op">:</span></span>
+<span id="cb1-354"><a href="#cb1-354"></a>        std<span class="op">::</span>define_static_array<span class="op">(</span>bound_classes<span class="op">(</span>L<span class="op">::</span>language<span class="op">)))</span> <span class="op">{</span></span>
+<span id="cb1-355"><a href="#cb1-355"></a>      std<span class="op">::</span>string declarations<span class="op">,</span> destructor<span class="op">;</span></span>
+<span id="cb1-356"><a href="#cb1-356"></a>      std<span class="op">::</span>vector<span class="op">&lt;</span>std<span class="op">::</span>string<span class="op">&gt;</span> methods<span class="op">;</span></span>
+<span id="cb1-357"><a href="#cb1-357"></a>      <span class="kw">template</span> <span class="cf">for</span> <span class="op">(</span><span class="kw">constexpr</span> std<span class="op">::</span>meta<span class="op">::</span>info fn <span class="op">:</span></span>
+<span id="cb1-358"><a href="#cb1-358"></a>          std<span class="op">::</span>define_static_array<span class="op">(</span>bound_functions<span class="op">(</span>cls<span class="op">,</span> L<span class="op">::</span>language<span class="op">)))</span> <span class="op">{</span></span>
+<span id="cb1-359"><a href="#cb1-359"></a>        declarations <span class="op">+=</span> format_callable<span class="op">&lt;</span>L<span class="op">,</span> fn<span class="op">,</span> L<span class="op">::</span>foreign_declaration<span class="op">&gt;();</span></span>
+<span id="cb1-360"><a href="#cb1-360"></a>        <span class="cf">if</span> <span class="kw">constexpr</span> <span class="op">(</span>std<span class="op">::</span>meta<span class="op">::</span>is_destructor<span class="op">(</span>fn<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb1-361"><a href="#cb1-361"></a>          destructor <span class="op">=</span> format_callable<span class="op">&lt;</span>L<span class="op">,</span> fn<span class="op">,</span> L<span class="op">::</span>destructor<span class="op">&gt;();</span></span>
+<span id="cb1-362"><a href="#cb1-362"></a>        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb1-363"><a href="#cb1-363"></a>          <span class="kw">constexpr</span> <span class="kw">auto</span><span class="op">&amp;</span> layout <span class="op">=</span></span>
+<span id="cb1-364"><a href="#cb1-364"></a>              result_type<span class="op">(</span>fn<span class="op">)</span> <span class="op">==</span> <span class="op">^^</span><span class="dt">void</span> <span class="op">?</span> L<span class="op">::</span>void_method <span class="op">:</span> L<span class="op">::</span>method<span class="op">;</span></span>
+<span id="cb1-365"><a href="#cb1-365"></a>          methods<span class="op">.</span>push_back<span class="op">(</span>format_callable<span class="op">&lt;</span>L<span class="op">,</span> fn<span class="op">,</span> layout<span class="op">&gt;());</span></span>
+<span id="cb1-366"><a href="#cb1-366"></a>        <span class="op">}</span></span>
+<span id="cb1-367"><a href="#cb1-367"></a>      <span class="op">}</span></span>
+<span id="cb1-368"><a href="#cb1-368"></a>      classes <span class="op">+=</span> std<span class="op">::</span>format<span class="op">(</span></span>
+<span id="cb1-369"><a href="#cb1-369"></a>          L<span class="op">::</span>class_body<span class="op">,</span> std<span class="op">::</span>meta<span class="op">::</span>identifier_of<span class="op">(</span>cls<span class="op">),</span> declarations<span class="op">,</span></span>
+<span id="cb1-370"><a href="#cb1-370"></a>          std<span class="op">::</span>format<span class="op">(</span><span class="st">&quot;</span><span class="sc">{:s}</span><span class="st">&quot;</span><span class="op">,</span> methods <span class="op">|</span> std<span class="op">::</span>views<span class="op">::</span>join_with<span class="op">(</span><span class="ch">&#39;</span><span class="sc">\n</span><span class="ch">&#39;</span><span class="op">)),</span></span>
+<span id="cb1-371"><a href="#cb1-371"></a>          destructor<span class="op">);</span></span>
+<span id="cb1-372"><a href="#cb1-372"></a>    <span class="op">}</span></span>
+<span id="cb1-373"><a href="#cb1-373"></a>    std<span class="op">::</span>string functions<span class="op">;</span></span>
+<span id="cb1-374"><a href="#cb1-374"></a>    <span class="kw">template</span> <span class="cf">for</span> <span class="op">(</span><span class="kw">constexpr</span> std<span class="op">::</span>meta<span class="op">::</span>info fn <span class="op">:</span></span>
+<span id="cb1-375"><a href="#cb1-375"></a>        std<span class="op">::</span>define_static_array<span class="op">(</span>bound_functions<span class="op">(^^::,</span> L<span class="op">::</span>language<span class="op">)))</span> <span class="op">{</span></span>
+<span id="cb1-376"><a href="#cb1-376"></a>      functions <span class="op">+=</span> format_callable<span class="op">&lt;</span>L<span class="op">,</span> fn<span class="op">,</span> L<span class="op">::</span>function<span class="op">&gt;();</span></span>
+<span id="cb1-377"><a href="#cb1-377"></a>    <span class="op">}</span></span>
+<span id="cb1-378"><a href="#cb1-378"></a>    std<span class="op">::</span>ofstream out<span class="op">(</span>L<span class="op">::</span>file<span class="op">);</span></span>
+<span id="cb1-379"><a href="#cb1-379"></a>    std<span class="op">::</span>print<span class="op">(</span>out<span class="op">,</span> license<span class="op">,</span> L<span class="op">::</span>comment<span class="op">);</span></span>
+<span id="cb1-380"><a href="#cb1-380"></a>    std<span class="op">::</span>print<span class="op">(</span>out<span class="op">,</span> L<span class="op">::</span>file_body<span class="op">,</span> classes<span class="op">,</span> functions<span class="op">);</span></span>
+<span id="cb1-381"><a href="#cb1-381"></a>  <span class="op">}</span></span>
+<span id="cb1-382"><a href="#cb1-382"></a><span class="op">}</span></span>
+<span id="cb1-383"><a href="#cb1-383"></a></span>
+<span id="cb1-384"><a href="#cb1-384"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-385"><a href="#cb1-385"></a>  tool<span class="op">::</span>generate_bindings<span class="op">&lt;</span>tool<span class="op">::</span>c_header<span class="op">&gt;();</span></span>
+<span id="cb1-386"><a href="#cb1-386"></a>  tool<span class="op">::</span>generate_bindings<span class="op">&lt;</span>tool<span class="op">::</span>c_source<span class="op">&gt;();</span></span>
+<span id="cb1-387"><a href="#cb1-387"></a>  tool<span class="op">::</span>generate_bindings<span class="op">&lt;</span>tool<span class="op">::</span>ecmascript<span class="op">&gt;();</span></span>
+<span id="cb1-388"><a href="#cb1-388"></a>  tool<span class="op">::</span>generate_bindings<span class="op">&lt;</span>tool<span class="op">::</span>python<span class="op">&gt;();</span></span>
+<span id="cb1-389"><a href="#cb1-389"></a>  tool<span class="op">::</span>generate_bindings<span class="op">&lt;</span>tool<span class="op">::</span>rust<span class="op">&gt;();</span></span>
+<span id="cb1-390"><a href="#cb1-390"></a><span class="op">}</span></span></code></pre></div>
+<p>© 2026 Adrian Johnston. This file is licensed under the terms of the
+LICENSE.md file.</p>
+</div>
+</div>
+<script>
+const body = document.body;
+const noSyntaxHighlightingCheckbox = document.getElementById('no-syntax-highlighting-toggle');
+noSyntaxHighlightingCheckbox.checked = false;
+noSyntaxHighlightingCheckbox.addEventListener('change', () => {
+  body.dataset.syntaxHighlighting = noSyntaxHighlightingCheckbox.checked ? 'off' : 'on';
+});
+
+const hideDeletedTextCheckbox = document.getElementById('hide-deleted-text-toggle');
+hideDeletedTextCheckbox.checked = false;
+hideDeletedTextCheckbox.addEventListener('change', () => {
+  body.dataset.deletedText = hideDeletedTextCheckbox.checked ? 'hide' : 'show';
+});
+</script>
+</body>
+</html>

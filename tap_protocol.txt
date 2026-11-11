@@ -1,0 +1,155 @@
+TAP version 14
+1..4
+# Subtest: Rust
+    # rustc: rustc 1.96.0 (ac68faa20 2026-05-25)
+    # binding: staging/interop_generated.rs
+    ok 1 - t.current_temp()
+      ---
+      type: f64
+      found: 20.0
+      wanted: 20.0
+      ...
+    ok 2 - t.temp_setting()
+      ---
+      type: f64
+      found: 22.0
+      wanted: 22.0
+      ...
+    ok 3 - u.current_temp()
+      ---
+      type: f64
+      found: 25.0
+      wanted: 25.0
+      ...
+    ok 4 - u.temp_setting()
+      ---
+      type: f64
+      found: 18.0
+      wanted: 18.0
+      ...
+    ok 5 - t.temp_setting() raised
+      ---
+      type: f64
+      found: 23.0
+      wanted: 23.0
+      ...
+    1..5
+ok 1 - Rust
+# Subtest: Python
+    # python: CPython 3.14.4
+    # binding: staging/interop_generated.py
+    ok 1 - t.current_temp()
+      ---
+      type: float
+      found: 20.0
+      wanted: 20.0
+      ...
+    ok 2 - t.temp_setting()
+      ---
+      type: float
+      found: 22.0
+      wanted: 22.0
+      ...
+    ok 3 - t.furnace_on()
+      ---
+      type: bool
+      found: true
+      wanted: true
+      ...
+    ok 4 - t.fan_on()
+      ---
+      type: bool
+      found: true
+      wanted: true
+      ...
+    ok 5 - u.current_temp()
+      ---
+      type: float
+      found: 25.0
+      wanted: 25.0
+      ...
+    ok 6 - u.temp_setting()
+      ---
+      type: float
+      found: 18.0
+      wanted: 18.0
+      ...
+    ok 7 - u.furnace_on()
+      ---
+      type: bool
+      found: false
+      wanted: false
+      ...
+    ok 8 - u.fan_on()
+      ---
+      type: bool
+      found: true
+      wanted: true
+      ...
+    1..8
+ok 2 - Python
+# Subtest: ECMAScript
+    # node: v22.22.1 koffi: 3.3.4
+    # binding: staging/interop_generated.js
+    ok 1 - t.current_temp()
+      ---
+      type: number
+      found: 20
+      wanted: 20
+      ...
+    ok 2 - t.temp_setting()
+      ---
+      type: number
+      found: 22
+      wanted: 22
+      ...
+    ok 3 - t.furnace_on()
+      ---
+      type: boolean
+      found: true
+      wanted: true
+      ...
+    ok 4 - t.fan_on()
+      ---
+      type: boolean
+      found: true
+      wanted: true
+      ...
+    ok 5 - u.current_temp()
+      ---
+      type: number
+      found: 25
+      wanted: 25
+      ...
+    ok 6 - u.temp_setting()
+      ---
+      type: number
+      found: 18
+      wanted: 18
+      ...
+    ok 7 - u.furnace_on()
+      ---
+      type: boolean
+      found: false
+      wanted: false
+      ...
+    ok 8 - u.fan_on()
+      ---
+      type: boolean
+      found: true
+      wanted: true
+      ...
+    1..8
+ok 3 - ECMAScript
+# Subtest: C++
+    # cc: 16.0.1 20260322 (experimental) [trunk r16-8246-g569ace1fa50]
+    # testing: interop.hpp interop_generated.h interop_generated.cpp
+    ok 1 - test::test_thermostat_cpp
+    ok 2 - test::test_thermostat_c
+    ok 3 - test::test_result_types
+    ok 4 - test::test_stored_list
+    ok 5 - test::test_computed_view
+    ok 6 - test::test_literal_null
+    ok 7 - test::test_call_chain
+    1..7
+ok 4 - C++
