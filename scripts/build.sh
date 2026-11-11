@@ -24,7 +24,7 @@ start_clock() {
 
 locate_root() {
   root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-  script=$root/scripts/build_proposal.sh
+  script=$root/scripts/build.sh
 }
 
 parse_arguments() {
@@ -131,6 +131,11 @@ quiet_step() {
   tail -n "+$((start + 1))" "$log" | quote_lines "# "
   echo "Bail out! $label failed, see build/log.txt"
   exit 1
+}
+
+fetch_framework() {
+  [[ ! -f $root/wg21/flat.mk ]] || return 0
+  quiet_step "submodule install" git -C "$root" submodule update --init
 }
 
 framework_make() {
@@ -341,6 +346,7 @@ main() {
   locate_proposal
   select_targets
   prepare_output
+  fetch_framework
   record_site
   copy_license
   build_paper
