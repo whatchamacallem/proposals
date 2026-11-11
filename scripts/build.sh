@@ -193,11 +193,15 @@ record_toolchain() {
 }
 
 copy_sources() {
-  quiet_step "source copy" cp -u "$root"/interop.* "$out"
+  quiet_step "source copy" cp -u "$root"/interop.* "$root"/test.* "$out"
+}
+
+copy_license() {
+  quiet_step "license copy" cp -u "$root/LICENSE.md" "$out"
 }
 
 compile_generator() {
-  stale_output "$root/build/interop" "$root/interop.cpp" "$root/interop.h" \
+  stale_output "$root/build/interop" "$root/interop.cpp" "$root/interop.hpp" \
     "$toolchain" || return 0
   quiet_step "generator build" "$cxx" "${flags[@]}" "$root/interop.cpp" \
     -o "$root/build/interop"
@@ -205,17 +209,18 @@ compile_generator() {
 
 run_generator() {
   local output
-  for output in "$out"/interop_generated.{rs,py,js,cpp}; do
+  for output in "$out"/interop_generated.{rs,py,js,cpp,h}; do
     stale_output "$output" "$root/build/interop" || continue
     quiet_step "generator run" env -C "$out" "$root/build/interop"
     break
   done
-  quiet_step "binding log" tail -n +1 "$out"/interop_generated.{rs,py,js,cpp}
+  quiet_step "binding log" tail -n +1 \
+    "$out"/interop_generated.{rs,py,js,cpp,h}
 }
 
 compile_shim() {
   stale_output "$root/build/libinterop.so" "$out/interop_generated.cpp" \
-    "$out/interop.h" "$toolchain" || return 0
+    "$out/interop.hpp" "$toolchain" || return 0
   quiet_step "shim build" "$cxx" "${flags[@]}" -shared -fPIC \
     "$out/interop_generated.cpp" -o "$root/build/libinterop.so"
 }
@@ -240,7 +245,7 @@ build_bindings() {
   install_koffi
 }
 
-compile_test() {
+compile_rust() {
   stale_output "$root/build/test_rs" "$root/test.rs" \
     "$out/interop_generated.rs" "$toolchain" || return 0
   RUSTC_VERSION=$(rustc --version) INTEROP_RS=$out/interop_generated.rs rustc \
@@ -249,7 +254,18 @@ compile_test() {
 }
 
 test_rust() {
-  compile_test && "$root/build/test_rs"
+  compile_rust && "$root/build/test_rs"
+}
+
+compile_cpp() {
+  stale_output "$root/build/test_cpp" "$root/test.cpp" \
+    "$root/interop.hpp" "$out/interop_generated.h" "$toolchain" || return 0
+  "$cxx" "${flags[@]}" -I "$out" "$root/test.cpp" -L "$root/build" \
+    -l interop -o "$root/build/test_cpp"
+}
+
+test_cpp() {
+  compile_cpp && "$root/build/test_cpp"
 }
 
 run_subtest() {
@@ -275,12 +291,13 @@ run_tests() {
   fi
 
   export LD_LIBRARY_PATH=$root/build
-  echo "1..3"
+  echo "1..4"
   run_subtest 1 Rust test_rust
   run_subtest 2 Python env "PYTHONPATH=$out" \
     "PYTHONPYCACHEPREFIX=$root/build/__pycache__" python3 "$root/test.py"
   run_subtest 3 ECMAScript \
     env "NODE_PATH=$out:$root/build/node_modules" node "$root/test.js"
+  run_subtest 4 C++ test_cpp
 }
 
 page_language() {
@@ -308,8 +325,8 @@ write_page() {
 
 build_pages() {
   local name pages=()
-  for name in interop.h interop.cpp interop_generated.{cpp,rs,py,js} \
-    tap_protocol.txt; do
+  for name in interop.hpp interop.cpp interop_generated.{cpp,h,rs,py,js} \
+    tap_protocol.txt test.{rs,py,js,cpp}; do
     [[ -e $out/$name ]] || continue
     write_page "$name"
     pages+=("$name.html")
@@ -325,6 +342,7 @@ main() {
   select_targets
   prepare_output
   record_site
+  copy_license
   build_paper
   build_index
   build_bindings

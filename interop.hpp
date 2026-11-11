@@ -4,26 +4,33 @@
 
 #pragma once
 
-#include <array>
 #include <concepts>
 #include <cstddef>
 #include <meta>
 #include <span>
 #include <string_view>
+#include <type_traits>
+#include <vector>
 
 namespace std {
   struct interop_type {
     template<convertible_to<string_view>... S>
-    consteval interop_type operator()(S... s) const {       // exposition only
-      auto stored_ = define_static_array(array<const char*, sizeof...(S)>{
-          define_static_string(string_view(s))...});
-      return {stored_.data(), stored_.size()};
+    consteval interop_type operator()(const S&... s) const {
+      vector<const char*> list(list_, list_ + size_);
+      (list.push_back(define_static_string(whole_(s))), ...);
+      auto kept = define_static_array(list);
+      return {kept.data(), kept.size()};
     }
-    constexpr span<const char* const> targets(void) const { // exposition only
+    constexpr span<const char* const> targets(void) const {
       return {list_, size_};
     }
-    const char* const* list_ = nullptr;                     // exposition only
-    size_t size_ = 0;                                       // exposition only
+    const char* const* list_;                         // exposition only
+    size_t size_;                                     // exposition only
+    template<class S>
+    static consteval string_view whole_(const S& s) { // exposition only
+      if constexpr (is_array_v<S>) return {s, extent_v<S> - 1};
+      else return s;
+    }
   };
   inline constexpr interop_type interop{};
 }

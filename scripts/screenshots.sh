@@ -21,34 +21,17 @@ clear_shots() {
 }
 
 build_site() {
-  "$root/scripts/build_proposal.sh" >/dev/null
+  "$root/scripts/build.sh" >/dev/null
 }
 
 capture_pages() {
   python3 - "$shots" "$site"/*.html <<'EOF'
-import base64
-import json
-import pathlib
-import subprocess
-import sys
-import tempfile
-
-shots = pathlib.Path(sys.argv[1])
-log = tempfile.TemporaryFile()
-chrome = subprocess.Popen(
-    ["sh", "-c", 'exec "$0" "$@" 3<&0 4>&1 </dev/null >/dev/null',
-     "chrome-headless-shell", "--remote-debugging-pipe",
-     "--window-size=1280,720", "--blink-settings=preferredColorScheme=1"],
-    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=log)
-sent = 0
-pending = b""
-
+import base64, json, pathlib, subprocess, sys, tempfile
 
 def give_up(problem):
     log.seek(0)
     sys.stderr.write(log.read().decode(errors="replace"))
     sys.exit(f"screenshots: {problem}")
-
 
 def next_message():
     global pending
@@ -60,7 +43,6 @@ def next_message():
     message, pending = pending.split(b"\0", 1)
     return json.loads(message)
 
-
 def send_command(method, session=None, **params):
     global sent
     sent += 1
@@ -70,7 +52,6 @@ def send_command(method, session=None, **params):
     chrome.stdin.write(json.dumps(command).encode() + b"\0")
     chrome.stdin.flush()
     return sent
-
 
 def await_reply(number, event=None):
     reply = None
@@ -84,22 +65,34 @@ def await_reply(number, event=None):
         give_up(reply["error"]["message"])
     return reply["result"]
 
+def main():
+    global log, chrome, sent, pending
+    shots = pathlib.Path(sys.argv[1])
+    log = tempfile.TemporaryFile()
+    chrome = subprocess.Popen(
+        ["sh", "-c", 'exec "$0" "$@" 3<&0 4>&1 </dev/null >/dev/null',
+         "chrome-headless-shell", "--remote-debugging-pipe",
+         "--window-size=1280,720", "--blink-settings=preferredColorScheme=1"],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=log)
+    sent = 0
+    pending = b""
+    target = await_reply(send_command("Target.createTarget", url="about:blank"))
+    session = await_reply(send_command(
+        "Target.attachToTarget", targetId=target["targetId"], flatten=True))
+    session = session["sessionId"]
+    await_reply(send_command("Page.enable", session))
+    for page in map(pathlib.Path, sys.argv[2:]):
+        loaded = await_reply(
+            send_command("Page.navigate", session, url=page.as_uri()),
+            "Page.loadEventFired")
+        if "errorText" in loaded:
+            give_up(f"{page.name}: {loaded['errorText']}")
+        image = await_reply(send_command("Page.captureScreenshot", session))
+        (shots / f"{page.name}.png").write_bytes(base64.b64decode(image["data"]))
+    send_command("Browser.close")
+    chrome.wait()
 
-target = await_reply(send_command("Target.createTarget", url="about:blank"))
-session = await_reply(send_command(
-    "Target.attachToTarget", targetId=target["targetId"], flatten=True))
-session = session["sessionId"]
-await_reply(send_command("Page.enable", session))
-for page in map(pathlib.Path, sys.argv[2:]):
-    loaded = await_reply(
-        send_command("Page.navigate", session, url=page.as_uri()),
-        "Page.loadEventFired")
-    if "errorText" in loaded:
-        give_up(f"{page.name}: {loaded['errorText']}")
-    image = await_reply(send_command("Page.captureScreenshot", session))
-    (shots / f"{page.name}.png").write_bytes(base64.b64decode(image["data"]))
-send_command("Browser.close")
-chrome.wait()
+main()
 EOF
 }
 
@@ -112,8 +105,8 @@ render_pdfs() {
 }
 
 print_summary() {
-  find "$shots" -type f -printf '%s\n' | LC_ALL=C awk -v start="$started" \
-    -v end="$(date +%s.%N)" '
+  find "$shots" -type f -printf '%s\n' |
+    LC_ALL=C awk -v start="$started" -v end="$(date +%s.%N)" '
       { bytes += $1 }
       END {
         printf "%.2f seconds. %d files. %.2f KiB.\n",

@@ -15,7 +15,7 @@ locate_root() {
 }
 
 build_files() {
-  "$root/scripts/build_proposal.sh" >/dev/null
+  "$root/scripts/build.sh" >/dev/null
 }
 
 push_site() {

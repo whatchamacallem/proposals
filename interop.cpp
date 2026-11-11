@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // This file is licensed under the terms of the LICENSE.md file.
 
-#include "interop.h"
+#include "interop.hpp"
 
 #include <algorithm>
 #include <format>
@@ -20,66 +20,132 @@ namespace tool {
   constexpr std::string_view license =
       "{0} SPDX-FileCopyrightText: © 2026 Adrian Johnston.\n"
       "{0} SPDX-License-Identifier: MIT\n"
-      "{0} This file is licensed under the terms of the LICENSE.md file.\n"
-      "\n";
+      "{0} This file is licensed under the terms of the LICENSE.md file.\n\n";
 
-  struct rust {
-    static constexpr std::string_view language = "Rust";
-    static constexpr const char* file = "interop_generated.rs";
+  struct c_header {
+    static constexpr std::string_view language = "";
+    static constexpr const char* file = "interop_generated.h";
     static constexpr std::string_view comment = "//";
     static constexpr std::string_view file_body =
-        "use std::ffi::c_void;\n"
-        "{0}{1}";
-    static constexpr std::string_view foreign_declaration = "";
-    static constexpr std::string_view class_body =
-        "\n#[allow(non_camel_case_types)]\n"
-        "#[repr(transparent)]\n"
-        "pub struct {0}(*mut c_void);\n"
-        "\nimpl {0} {{\n"
-        "{2}}}\n"
-        "{3}";
-    static constexpr std::string_view destructor =
-        "\nimpl Drop for {3} {{\n"
-        "    fn drop({1}) {{\n"
-        "        unsafe extern \"C\" {{\n"
-        "            safe fn {3}_{0}({5});\n"
-        "        }}\n"
-        "        {3}_{0}({4});\n"
-        "    }}\n"
-        "}}\n";
-    static constexpr std::string_view method =
-        "    #[must_use]\n"
-        "    pub fn {0}({1}) -> {2} {{\n"
-        "        unsafe extern \"C\" {{\n"
-        "            safe fn {3}_{0}({5}) -> {2};\n"
-        "        }}\n"
-        "        {3}_{0}({4})\n"
-        "    }}\n";
-    static constexpr std::string_view void_method =
-        "    pub fn {0}({1}) {{\n"
-        "        unsafe extern \"C\" {{\n"
-        "            safe fn {3}_{0}({5});\n"
-        "        }}\n"
-        "        {3}_{0}({4});\n"
-        "    }}\n";
-    static constexpr std::string_view function =
-        "\n#[must_use]\n"
-        "pub fn {0}({1}) -> {2} {{\n"
-        "    unsafe extern \"C\" {{\n"
-        "        safe fn {3}_{0}({5}) -> {2};\n"
-        "    }}\n"
-        "    {3}_{0}({4})\n"
-        "}}\n";
-    static constexpr std::string_view parameter = "{0}: {1}";
-    static constexpr std::string_view foreign = "_: {1}";
-    static constexpr std::string_view handle = "self.0";
-    static constexpr std::string_view receiver = "_: *mut c_void";
+        "#pragma once\n\n"
+        "#include <stdbool.h>\n\n"
+        "#ifdef __cplusplus\n"
+        "extern \"C\" {{\n"
+        "#endif\n"
+        "{0}{1}\n"
+        "#ifdef __cplusplus\n"
+        "}}\n"
+        "#endif\n";
+    static constexpr std::string_view foreign_declaration =
+        "{2} {3}_{0}_({5});\n";
+    static constexpr std::string_view class_body = "\n{1}";
+    static constexpr std::string_view destructor = "";
+    static constexpr std::string_view method = "";
+    static constexpr std::string_view void_method = "";
+    static constexpr std::string_view function = "\nvoid* {0}_({5});\n";
+    static constexpr std::string_view parameter = "";
+    static constexpr std::string_view foreign = "{1} {0}";
+    static constexpr std::string_view handle = "";
+    static constexpr std::string_view receiver = "void* self";
 
-    static consteval std::string_view self(std::meta::info fn) {
-      return std::meta::is_const(fn) ? "&self" : "&mut self";
+    static consteval std::string_view self(std::meta::info) {
+      return "";
     }
     static consteval std::string_view type(std::meta::info t) {
-      return t == ^^double ? "f64" : std::meta::display_string_of(t);
+      return std::meta::display_string_of(t);
+    }
+    static consteval std::string_view hint(std::meta::info t) {
+      return type(t);
+    }
+  };
+
+  struct c_source {
+    static constexpr std::string_view language = "";
+    static constexpr const char* file = "interop_generated.cpp";
+    static constexpr std::string_view comment = "//";
+    static constexpr std::string_view file_body =
+        "#include \"interop.hpp\"\n\n"
+        "extern \"C\" {{\n"
+        "{0}{1}}}\n";
+    static constexpr std::string_view foreign_declaration = "";
+    static constexpr std::string_view class_body = "\n{2}{3}";
+    static constexpr std::string_view destructor =
+        "\nvoid {3}_{0}_({5}) noexcept {{\n"
+        "  delete static_cast<{3}*>(self);\n"
+        "}}\n";
+    static constexpr std::string_view method =
+        "{2} {3}_{0}_({5}) noexcept {{\n"
+        "  return static_cast<{3}*>(self)->{0}({4});\n"
+        "}}\n";
+    static constexpr std::string_view void_method =
+        "void {3}_{0}_({5}) noexcept {{\n"
+        "  static_cast<{3}*>(self)->{0}({4});\n"
+        "}}\n";
+    static constexpr std::string_view function =
+        "\nvoid* {0}_({5}) noexcept {{\n"
+        "  return new auto(::{0}({4}));\n"
+        "}}\n";
+    static constexpr std::string_view parameter = "";
+    static constexpr std::string_view foreign = "{1} {0}";
+    static constexpr std::string_view handle = "";
+    static constexpr std::string_view receiver = "void* self";
+
+    static consteval std::string_view self(std::meta::info) {
+      return "";
+    }
+    static consteval std::string_view type(std::meta::info t) {
+      return std::meta::display_string_of(t);
+    }
+    static consteval std::string_view hint(std::meta::info t) {
+      return type(t);
+    }
+  };
+
+  struct ecmascript {
+    static constexpr std::string_view language = "ECMAScript";
+    static constexpr const char* file = "interop_generated.js";
+    static constexpr std::string_view comment = "//";
+    static constexpr std::string_view file_body =
+        "const koffi = require(\"koffi\");\n"
+        "\nconst lib = koffi.load(\"libinterop.so\");\n"
+        "{0}{1}";
+    static constexpr std::string_view foreign_declaration =
+        "\nconst {3}_{0}_ = lib.func(\n"
+        "  \"{2} {3}_{0}_({5})\",\n"
+        ");\n";
+    static constexpr std::string_view class_body =
+        "\nkoffi.alias(\"{0}\", \"void*\");\n"
+        "{1}\n"
+        "const {0} = {{\n"
+        "{2}{3}}};\n";
+    static constexpr std::string_view destructor =
+        "\n  [Symbol.dispose]() {{\n"
+        "    {3}_{0}_({4});\n"
+        "  }},\n";
+    static constexpr std::string_view method =
+        "  {0}({1}) {{\n"
+        "    return {3}_{0}_({4});\n"
+        "  }},\n";
+    static constexpr std::string_view void_method = method;
+    static constexpr std::string_view function =
+        "\nconst {0}_ = lib.func(\n"
+        "  \"{2} {0}_({5})\",\n"
+        ");\n\n"
+        "exports.{0} = ({1}) => {{\n"
+        "  return Object.create({2}, {{\n"
+        "    handle: {{ value: {0}_({4}) }},\n"
+        "  }});\n"
+        "}};\n";
+    static constexpr std::string_view parameter = "{0}";
+    static constexpr std::string_view foreign = "{1}";
+    static constexpr std::string_view handle = "this.handle";
+    static constexpr std::string_view receiver = "void*";
+
+    static consteval std::string_view self(std::meta::info) {
+      return "";
+    }
+    static consteval std::string_view type(std::meta::info t) {
+      return std::meta::display_string_of(t);
     }
     static consteval std::string_view hint(std::meta::info t) {
       return type(t);
@@ -95,24 +161,24 @@ namespace tool {
         "lib = ctypes.CDLL(\"libinterop.so\")\n"
         "{0}{1}";
     static constexpr std::string_view foreign_declaration =
-        "\nlib.{3}_{0}.restype = {2}\n"
-        "lib.{3}_{0}.argtypes = [{5}]\n";
+        "\nlib.{3}_{0}_.restype = {2}\n"
+        "lib.{3}_{0}_.argtypes = [{5}]\n";
     static constexpr std::string_view class_body =
         "{1}\n\n"
         "class {0}(ctypes.c_void_p):\n"
         "{2}{3}\n";
     static constexpr std::string_view destructor =
         "\n    def __del__({1}) -> {6}:\n"
-        "        lib.{3}_{0}({4})\n";
+        "        lib.{3}_{0}_({4})\n";
     static constexpr std::string_view method =
         "    def {0}({1}) -> {6}:\n"
-        "        return lib.{3}_{0}({4})\n";
+        "        return lib.{3}_{0}_({4})\n";
     static constexpr std::string_view void_method = method;
     static constexpr std::string_view function =
-        "\nlib.{3}_{0}.restype = {2}\n"
-        "lib.{3}_{0}.argtypes = [{5}]\n\n\n"
+        "\nlib.{0}_.restype = {2}\n"
+        "lib.{0}_.argtypes = [{5}]\n\n\n"
         "def {0}({1}) -> {6}:\n"
-        "    return lib.{3}_{0}({4})\n";
+        "    return lib.{0}_({4})\n";
     static constexpr std::string_view parameter = "{0}: {2}";
     static constexpr std::string_view foreign = "{1}";
     static constexpr std::string_view handle = "self";
@@ -135,104 +201,75 @@ namespace tool {
     }
   };
 
-  struct javascript {
-    static constexpr std::string_view language = "ECMAScript";
-    static constexpr const char* file = "interop_generated.js";
+  struct rust {
+    static constexpr std::string_view language = "Rust";
+    static constexpr const char* file = "interop_generated.rs";
     static constexpr std::string_view comment = "//";
     static constexpr std::string_view file_body =
-        "const koffi = require(\"koffi\");\n"
-        "\nconst lib = koffi.load(\"libinterop.so\");\n"
+        "use std::ffi::c_void;\n"
         "{0}{1}";
-    static constexpr std::string_view foreign_declaration =
-        "    {0}: lib.func(\"{2} {3}_{0}({5})\"),\n";
-    static constexpr std::string_view class_body =
-        "\nkoffi.alias(\"{0}\", \"void*\");\n\n"
-        "class {0} {{\n"
-        "  static #call = {{\n"
-        "{1}  }};\n\n"
-        "  constructor(handle) {{\n"
-        "    this.handle = handle;\n"
-        "  }}\n\n"
-        "{2}{3}}}\n";
-    static constexpr std::string_view destructor =
-        "\n  [Symbol.dispose]() {{\n"
-        "    {3}.#call.{0}({4});\n"
-        "  }}\n";
-    static constexpr std::string_view method =
-        "  {0}({1}) {{\n"
-        "    return {3}.#call.{0}({4});\n"
-        "  }}\n";
-    static constexpr std::string_view void_method = method;
-    static constexpr std::string_view function =
-        "\nconst {3}_{0} = lib.func(\n"
-        "  \"{2} {3}_{0}({5})\",\n"
-        ");\n\n"
-        "exports.{0} = ({1}) => {{\n"
-        "  return new {2}({3}_{0}({4}));\n"
-        "}};\n";
-    static constexpr std::string_view parameter = "{0}";
-    static constexpr std::string_view foreign = "{1}";
-    static constexpr std::string_view handle = "this.handle";
-    static constexpr std::string_view receiver = "void*";
-
-    static consteval std::string_view self(std::meta::info) {
-      return "";
-    }
-    static consteval std::string_view type(std::meta::info t) {
-      return std::meta::display_string_of(t);
-    }
-    static consteval std::string_view hint(std::meta::info t) {
-      return type(t);
-    }
-  };
-
-  struct abi {
-    static constexpr std::string_view language = "";
-    static constexpr const char* file = "interop_generated.cpp";
-    static constexpr std::string_view comment = "//";
-    static constexpr std::string_view file_body =
-        "#include \"interop.h\"\n\n"
-        "extern \"C\" {{\n"
-        "{0}{1}}}\n";
     static constexpr std::string_view foreign_declaration = "";
-    static constexpr std::string_view class_body = "\n{2}{3}";
+    static constexpr std::string_view class_body =
+        "\n#[allow(non_camel_case_types)]\n"
+        "#[repr(transparent)]\n"
+        "pub struct {0}(*mut c_void);\n"
+        "\nimpl {0} {{\n"
+        "{2}}}\n"
+        "{3}";
     static constexpr std::string_view destructor =
-        "\nvoid {3}_{0}({5}) noexcept {{\n"
-        "  delete static_cast<{3}*>(self);\n"
+        "\nimpl Drop for {3} {{\n"
+        "    fn drop({1}) {{\n"
+        "        unsafe extern \"C\" {{\n"
+        "            safe fn {3}_{0}_({5});\n"
+        "        }}\n"
+        "        {3}_{0}_({4});\n"
+        "    }}\n"
         "}}\n";
     static constexpr std::string_view method =
-        "{2} {3}_{0}({5}) noexcept {{\n"
-        "  return static_cast<{3}*>(self)->{0}({4});\n"
-        "}}\n";
+        "    #[must_use]\n"
+        "    pub fn {0}({1}) -> {2} {{\n"
+        "        unsafe extern \"C\" {{\n"
+        "            safe fn {3}_{0}_({5}) -> {2};\n"
+        "        }}\n"
+        "        {3}_{0}_({4})\n"
+        "    }}\n";
     static constexpr std::string_view void_method =
-        "void {3}_{0}({5}) noexcept {{\n"
-        "  static_cast<{3}*>(self)->{0}({4});\n"
-        "}}\n";
+        "    pub fn {0}({1}) {{\n"
+        "        unsafe extern \"C\" {{\n"
+        "            safe fn {3}_{0}_({5});\n"
+        "        }}\n"
+        "        {3}_{0}_({4});\n"
+        "    }}\n";
     static constexpr std::string_view function =
-        "\nvoid* {3}_{0}({5}) noexcept {{\n"
-        "  return new auto(::{0}({4}));\n"
+        "\n#[must_use]\n"
+        "pub fn {0}({1}) -> {2} {{\n"
+        "    unsafe extern \"C\" {{\n"
+        "        safe fn {0}_({5}) -> {2};\n"
+        "    }}\n"
+        "    {0}_({4})\n"
         "}}\n";
-    static constexpr std::string_view parameter = "";
-    static constexpr std::string_view foreign = "{1} {0}";
-    static constexpr std::string_view handle = "";
-    static constexpr std::string_view receiver = "void* self";
+    static constexpr std::string_view parameter = "{0}: {1}";
+    static constexpr std::string_view foreign = "_: {1}";
+    static constexpr std::string_view handle = "self.0";
+    static constexpr std::string_view receiver = "_: *mut c_void";
 
-    static consteval std::string_view self(std::meta::info) {
-      return "";
+    static consteval std::string_view self(std::meta::info fn) {
+      return std::meta::is_const(fn) ? "&self" : "&mut self";
     }
     static consteval std::string_view type(std::meta::info t) {
-      return std::meta::display_string_of(t);
+      return t == ^^double ? "f64" : std::meta::display_string_of(t);
     }
     static consteval std::string_view hint(std::meta::info t) {
       return type(t);
     }
   };
 
-  consteval std::optional<std::interop_type> annotation_of(std::meta::info decl) {
-    auto found = std::meta::annotations_of_with_type(decl, ^^std::interop_type);
-    return found.empty()
-               ? std::nullopt
-               : std::optional(std::meta::extract<std::interop_type>(found[0]));
+  consteval std::optional<std::interop_type> annotation_of(
+      std::meta::info decl) {
+    auto found =
+        std::meta::annotations_of_with_type(decl, ^^std::interop_type);
+    if (found.empty()) return std::nullopt;
+    return std::meta::extract<std::interop_type>(found[0]);
   }
 
   consteval bool binds_to(std::meta::info fn, std::string_view language) {
@@ -277,9 +314,9 @@ namespace tool {
   }
 
   consteval std::string_view scope_name(std::meta::info fn) {
-    return std::meta::identifier_of(std::meta::is_class_member(fn)
-                                        ? std::meta::parent_of(fn)
-                                        : result_type(fn));
+    return std::meta::is_class_member(fn)
+               ? std::meta::identifier_of(std::meta::parent_of(fn))
+               : "";
   }
 
   std::string comma_list(const std::vector<std::string>& items) {
@@ -345,8 +382,9 @@ namespace tool {
 }
 
 int main() {
-  tool::generate_bindings<tool::rust>();
+  tool::generate_bindings<tool::c_header>();
+  tool::generate_bindings<tool::c_source>();
+  tool::generate_bindings<tool::ecmascript>();
   tool::generate_bindings<tool::python>();
-  tool::generate_bindings<tool::javascript>();
-  tool::generate_bindings<tool::abi>();
+  tool::generate_bindings<tool::rust>();
 }

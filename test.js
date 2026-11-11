@@ -5,22 +5,11 @@
 const koffi = require("koffi");
 const interop = require("interop_generated");
 
-console.log(`# Node ${process.version}, koffi ${koffi.version}`);
+console.log(`# node: ${process.version} koffi: ${koffi.version}`);
 console.log(`# binding: ${require.resolve("interop_generated")}`);
 
 const t = interop.thermostat_factory(20, 22);
 const u = interop.thermostat_factory(25, 18);
-
-const prototype = Object.getPrototypeOf(t);
-const bindings = [
-  ...Object.getOwnPropertyNames(prototype)
-    .filter((name) => name !== "constructor")
-    .map((name) => [name, prototype[name]]),
-  ...Object.entries(interop),
-];
-for (const [name, binding] of bindings) {
-  console.log(`# binds: ${name}${/\(.*?\)/.exec(binding)[0]}`);
-}
 
 const checks = [
   ["t.current_temp()", t.current_temp(), 20],

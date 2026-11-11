@@ -9,15 +9,11 @@ import sys
 
 import interop_generated as interop
 
-print(f"# {platform.python_implementation()} {platform.python_version()}")
+print(f"# python: {platform.python_implementation()} {platform.python_version()}")
 print(f"# binding: {interop.__file__}")
 
 t = interop.thermostat_factory(20, 22)
 u = interop.thermostat_factory(25, 18)
-
-for name, member in [*vars(type(t)).items(), *vars(interop).items()]:
-    if inspect.isfunction(member):
-        print(f"# binds: {name}{inspect.signature(member)}")
 
 checks = [
     ("t.current_temp()", t.current_temp(), 20.0),
